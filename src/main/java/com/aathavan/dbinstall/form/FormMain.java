@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Objects;
 
 @Component
@@ -179,6 +180,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         txtCompanyCode = new JTextField();
         txtCompanyCode.setBounds(x, y, txtCompWidth, compHeight);
         txtCompanyCode.setEditable(false);
+        txtCompanyCode.setVerifyInputWhenFocusTarget(false);
         lblCompanyCreationImg.add(txtCompanyCode);
 
 
@@ -269,6 +271,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 }
             }
         });
+
 
     }
 
@@ -364,10 +367,19 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(getContentPane(), ex.getMessage());
+            logger.error(ex.getMessage());
         }
     }
 
-    private void setTxtFileTiValues() {
+    private void setTxtFileTiValues() throws Exception {
+        File file = new File("CompanyDetail.txt");
+        FileWriter fileWriter = new FileWriter(file);
+        fileWriter.write(txtServerIp.getText().trim() + "\n");
+        fileWriter.write(Secutity.encrypter(txtPortNo.getText()) + "\n");
+        fileWriter.write(Secutity.encrypter(txtUsername.getText()) + "\n");
+        fileWriter.write(Secutity.encrypter(String.valueOf(txtPassword.getPassword()))+ "\n");
+        fileWriter.write(Secutity.encrypter(txtCompanyCode.getText()) + "\n");
+        fileWriter.close();
     }
 
     @Override
