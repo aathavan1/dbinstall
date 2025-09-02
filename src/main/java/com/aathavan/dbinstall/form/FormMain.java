@@ -24,6 +24,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private JButton btnCreate, btnClear;
 
+    private JTabbedPane tabMain;
+
     private ClassLoader classLoader = this.getClass().getClassLoader();
 
     private final org.apache.log4j.Logger logger = Logger.getLogger(FormMain.class);
@@ -56,10 +58,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private void componentCreation() {
 
-        JPanel panelCompanyCreation;
-        JTabbedPane tabMain;
-        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode, lblCompanyCreationImg,
-                lblExit;
+        JPanel panelCompanyCreation, panelDbInstall;
+        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode,
+                lblCompanyCreationImg, lblDbInstallImg, lblExit,lblDbInstallHeading;
 
         Font font = new Font("Times New Roman", Font.PLAIN, 15);
 
@@ -80,6 +81,12 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         panelCompanyCreation.setBorder(BorderFactory.createLineBorder(Color.blue));
         tabMain.add(panelCompanyCreation);
 
+        panelDbInstall = new JPanel(null);
+        panelDbInstall.setBounds(0, 0, getWidth(), getHeight());
+        panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
+        tabMain.add(panelDbInstall);
+
+
         lblCompanyCreationImg = new JLabel();
         lblCompanyCreationImg.setBounds(0, 0, panelCompanyCreation.getWidth(), panelCompanyCreation.getHeight());
         lblCompanyCreationImg.setIcon(backgroundImageIcon);
@@ -89,6 +96,13 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 //        lblExit=new JLabel();
 //        lblExit.setBounds();
 //        lblExit.set
+
+
+        lblDbInstallHeading = new JLabel("COMPANY CREATION");
+        lblDbInstallHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth*5, compHeight);
+        lblDbInstallHeading.setFont(new Font("Roboto", Font.BOLD, 40));
+        lblDbInstallHeading.setForeground(Color.decode("#964B00"));
+        lblCompanyCreationImg.add(lblDbInstallHeading);
 
 
         lblServerIp = new JLabel("Server Ip");
@@ -215,9 +229,12 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private void fileRead() {
         try {
-            File file = new File("compdetails.company");
+            File file = new File("CompanyDetail.txt");
             if (!file.exists()) {
-//                JOptionPane.showMessageDialog(getContentPane(), "Company Details Not Found... Create a New Company");
+                JOptionPane.showMessageDialog(getContentPane(), "Company Details Not Found... Create a New Company");
+                tabMain.setSelectedIndex(0);
+            } else {
+                tabMain.setSelectedIndex(1);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(getContentPane(), e.getMessage());
@@ -377,7 +394,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         fileWriter.write(txtServerIp.getText().trim() + "\n");
         fileWriter.write(Secutity.encrypter(txtPortNo.getText()) + "\n");
         fileWriter.write(Secutity.encrypter(txtUsername.getText()) + "\n");
-        fileWriter.write(Secutity.encrypter(String.valueOf(txtPassword.getPassword()))+ "\n");
+        fileWriter.write(Secutity.encrypter(String.valueOf(txtPassword.getPassword())) + "\n");
         fileWriter.write(Secutity.encrypter(txtCompanyCode.getText()) + "\n");
         fileWriter.close();
 
