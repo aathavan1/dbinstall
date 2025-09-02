@@ -380,6 +380,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         fileWriter.write(Secutity.encrypter(String.valueOf(txtPassword.getPassword()))+ "\n");
         fileWriter.write(Secutity.encrypter(txtCompanyCode.getText()) + "\n");
         fileWriter.close();
+
     }
 
     @Override
