@@ -2,7 +2,7 @@ package com.aathavan.dbinstall.form;
 
 import com.aathavan.dbinstall.common.DbInstallCommon;
 import com.aathavan.dbinstall.common.DbInstallConstant;
-import com.aathavan.dbinstall.common.ImagesPath;
+import com.aathavan.dbinstall.common.CommonEnum;
 import com.aathavan.dbinstall.common.Secutity;
 import com.aathavan.dbinstall.config.ConnectionConfig;
 import com.aathavan.dbinstall.model.ServerCredentials;
@@ -19,6 +19,9 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -29,18 +32,18 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private JPasswordField txtPassword;
     private JTextArea txtArea;
 
-    private JButton btnCreate, btnClear, btnInstall;
+    private JButton btnCreate, btnClear, btnInstall, btnExit1, btnExit2;
 
     private JTabbedPane tabMain;
 
-    private ClassLoader classLoader = this.getClass().getClassLoader();
-
-    private final org.apache.log4j.Logger logger = Logger.getLogger(FormMain.class);
+    private final Logger logger = Logger.getLogger(FormMain.class);
     private ImageIcon backgroundImageIcon = null;
 
     public FormMain() {
 
-        backgroundImageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource(ImagesPath.Image.BACKGROUND.getValue())));
+        ClassLoader classLoader = this.getClass().getClassLoader();
+
+        backgroundImageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource(CommonEnum.Image.BACKGROUND.getValue())));
         setSize(backgroundImageIcon.getIconWidth(), backgroundImageIcon.getIconHeight());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,9 +53,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         addWindowListener(this);
         try {
             BufferedImage bufferedImage = null;
-            if (classLoader.resources(ImagesPath.Image.LOGO_ICON.getValue()) != null
-                    && ImageIO.read(Objects.requireNonNull(classLoader.getResource(ImagesPath.Image.LOGO_ICON.getValue()))) != null) {
-                bufferedImage = ImageIO.read(Objects.requireNonNull(classLoader.getResource(ImagesPath.Image.LOGO_ICON.getValue())));
+            if (classLoader.resources(CommonEnum.Image.LOGO_ICON.getValue()) != null
+                    && ImageIO.read(Objects.requireNonNull(classLoader.getResource(CommonEnum.Image.LOGO_ICON.getValue()))) != null) {
+                bufferedImage = ImageIO.read(Objects.requireNonNull(classLoader.getResource(CommonEnum.Image.LOGO_ICON.getValue())));
             }
             if (bufferedImage != null)
                 setIconImage(bufferedImage);
@@ -85,58 +88,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     }
 
-    private void panelDbInstallCreation() {
-        JPanel panelDbInstall;
-
-        JLabel lblBackgroundImg, lblHeading;
-
-        Font font = new Font("Times New Roman", Font.PLAIN, 15);
-
-        int compWidth = getWidth() * 20 / 100;
-        int compHeight = getHeight() * 4 / 100;
-        int txtCompWidth = (int) (compWidth * 1.2);
-        double hGap = 1.1, vGap = 7.1;
-        int x, y;
-
-
-        panelDbInstall = new JPanel(null);
-        panelDbInstall.setBounds(0, 0, getWidth(), getHeight());
-        panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
-        tabMain.add(panelDbInstall);
-
-        lblBackgroundImg = new JLabel();
-        lblBackgroundImg.setBounds(0, 0, panelDbInstall.getWidth(), panelDbInstall.getHeight());
-        lblBackgroundImg.setIcon(backgroundImageIcon);
-        panelDbInstall.add(lblBackgroundImg);
-
-
-        lblHeading = new JLabel("DATABASE INSTALL");
-        lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
-        lblHeading.setFont(new Font("Roboto", Font.BOLD, 40));
-        lblHeading.setForeground(Color.decode("#964B00"));
-        lblBackgroundImg.add(lblHeading);
-
-        y = DbInstallCommon.verticalGap(panelDbInstall, lblHeading, vGap);
-
-        txtArea = new JTextArea();
-        txtArea.setBounds(getWidth() * 15 / 100, y, getWidth() * 70 / 100, getHeight() * 70 / 100);
-//        txtArea.setBorder(BorderFactory.createLineBorder(2,2,2,2));
-        txtArea.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(5, 5, 5, 5)));
-        lblBackgroundImg.add(txtArea);
-
-
-        y = DbInstallCommon.verticalGap(panelDbInstall, txtArea, vGap / 2);
-
-        btnInstall = new JButton("Install");
-        btnInstall.setBounds(getWidth() * 40 / 100, y, (int) (compWidth / 1.4), (int) (compHeight * 1.2));
-        btnInstall.setForeground(Color.white);
-        btnInstall.setFont(font);
-        btnInstall.setBackground(Color.decode("#4b7abd"));
-        btnInstall.setBorderPainted(false);
-        btnInstall.setVerifyInputWhenFocusTarget(false);
-        lblBackgroundImg.add(btnInstall);
-
-    }
 
     private void panelCompanyCreation() {
         JPanel panelCompanyCreation;
@@ -259,35 +210,92 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
         txtCompanyCode = new JTextField();
         txtCompanyCode.setBounds(x, y, txtCompWidth, compHeight);
-        txtCompanyCode.setEditable(false);
-        txtCompanyCode.setVerifyInputWhenFocusTarget(false);
+        txtCompanyCode.setEnabled(false);
         lblCompanyCreationImg.add(txtCompanyCode);
 
 
-        x = lblServerIp.getX() + (lblServerIp.getWidth() / 2);
+        x = lblServerIp.getX() + (lblServerIp.getWidth() / 4);
         y = DbInstallCommon.verticalGap(panelCompanyCreation, txtCompanyCode, vGap / 2);
 
 
-        btnClear = new JButton("Clear");
-        btnClear.setBounds(x, y, (int) (compWidth / 1.4), (int) (compHeight * 1.2));
-        btnClear.setForeground(Color.white);
-        btnClear.setFont(font);
-        btnClear.setBackground(Color.decode("#4b7abd"));
-        btnClear.setBorderPainted(false);
-        btnClear.setVerifyInputWhenFocusTarget(false);
+        btnClear = btnCreation("Clear", x, y, (int) (compWidth / 1.6), (int) (compHeight * 1.2), false, font);
         lblCompanyCreationImg.add(btnClear);
 
 
         x = DbInstallCommon.horizontalGap(panelCompanyCreation, btnClear, 5);
 
-        btnCreate = new JButton("Create");
-        btnCreate.setBounds(x, y, (int) (compWidth / 1.4), (int) (compHeight * 1.2));
-        btnCreate.setForeground(Color.white);
-        btnCreate.setFont(font);
-        btnCreate.setBackground(Color.decode("#4b7abd"));
-        btnCreate.setBorderPainted(false);
+        btnCreate = btnCreation("Create", x, y, btnClear.getWidth(), btnClear.getHeight(), true, font);
         lblCompanyCreationImg.add(btnCreate);
 
+        x = DbInstallCommon.horizontalGap(panelCompanyCreation, btnCreate, 5);
+
+        btnExit1 = btnCreation("Exit", x, y, btnClear.getWidth(), btnClear.getHeight(), false, font);
+        lblCompanyCreationImg.add(btnExit1);
+
+    }
+    private void panelDbInstallCreation() {
+        JPanel panelDbInstall;
+
+        JLabel lblBackgroundImg, lblHeading;
+
+        Font font = new Font("Times New Roman", Font.PLAIN, 15);
+
+        int compWidth = getWidth() * 20 / 100;
+        int compHeight = getHeight() * 4 / 100;
+        int txtCompWidth = (int) (compWidth * 1.2);
+        double hGap = 1.1, vGap = 7.1;
+        int x, y;
+
+
+        panelDbInstall = new JPanel(null);
+        panelDbInstall.setBounds(0, 0, getWidth(), getHeight());
+        panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
+        tabMain.add(panelDbInstall);
+
+        lblBackgroundImg = new JLabel();
+        lblBackgroundImg.setBounds(0, 0, panelDbInstall.getWidth(), panelDbInstall.getHeight());
+        lblBackgroundImg.setIcon(backgroundImageIcon);
+        panelDbInstall.add(lblBackgroundImg);
+
+
+        lblHeading = new JLabel("DATABASE INSTALL");
+        lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
+        lblHeading.setFont(new Font("Roboto", Font.BOLD, 40));
+        lblHeading.setForeground(Color.decode("#964B00"));
+        lblBackgroundImg.add(lblHeading);
+
+        y = DbInstallCommon.verticalGap(panelDbInstall, lblHeading, vGap);
+
+        txtArea = new JTextArea();
+        txtArea.setBounds(getWidth() * 15 / 100, y, getWidth() * 70 / 100, getHeight() * 70 / 100);
+//        txtArea.setBorder(BorderFactory.createLineBorder(2,2,2,2));
+        txtArea.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(5, 5, 5, 5)));
+        lblBackgroundImg.add(txtArea);
+
+
+        y = DbInstallCommon.verticalGap(panelDbInstall, txtArea, vGap / 2);
+
+        btnInstall = btnCreation("Install", getWidth() * 40 / 100, y, (int) (compWidth / 1.6), (int) (compHeight * 1.2), false, font);
+        lblBackgroundImg.add(btnInstall);
+
+
+        x = DbInstallCommon.horizontalGap(panelDbInstall, btnInstall, hGap * 2);
+
+        btnExit2 = btnCreation("Exit", x, y, btnInstall.getWidth(), btnInstall.getHeight(), false, font);
+        lblBackgroundImg.add(btnExit2);
+
+    }
+
+
+    private JButton btnCreation(String name, int x, int y, int width, int height, boolean isRequireVerifire, Font font) {
+        JButton jButton = new JButton(name);
+        jButton.setBounds(x, y, width, (int) height);
+        jButton.setForeground(Color.white);
+        jButton.setFont(font);
+        jButton.setBackground(Color.decode("#4b7abd"));
+        jButton.setVerifyInputWhenFocusTarget(isRequireVerifire);
+        jButton.setBorderPainted(false);
+        return jButton;
     }
 
 
@@ -300,11 +308,32 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
             } else {
 
 
+                List<String> fileDetail = Files.readAllLines(Paths.get(file.toURI()));
+
+                ServerCredentials serverCredentials = new ServerCredentials();
+                serverCredentials.setServerip(fileDetail.getFirst());
+                serverCredentials.setPortno(Secutity.decrypter(fileDetail.get(1)));
+                serverCredentials.setUsername(Secutity.decrypter(fileDetail.get(2)));
+                serverCredentials.setPassword(Secutity.decrypter(fileDetail.get(3)));
+                serverCredentials.setCompanycode(Secutity.decrypter(fileDetail.get(4)));
+                serverCredentials.setCompanyname(Secutity.decrypter(fileDetail.get(5)));
+
+                DbInstallConstant.setServerCredentials(serverCredentials);
+
+                if (!checkServerCredentials(serverCredentials)) {
+                    tabMain.setSelectedIndex(0);
+                    return;
+                }
 
                 tabMain.setSelectedIndex(1);
+//                JOptionPane.showMessageDialog(getContentPane(), "Server Connected Sucessfully...");
             }
+        } catch (IndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(getContentPane(), "Invalid Server File...!!");
+            tabMain.setSelectedIndex(0);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(getContentPane(), e.getMessage());
+            tabMain.setSelectedIndex(0);
         }
     }
 
@@ -323,13 +352,15 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private void compoundListener() {
         addListeners(txtServerIp, true);
-        addListeners(txtPortNo, false);
-        addListeners(txtCompanyName, false);
-        addListeners(txtPassword, false);
-        addListeners(txtUsername, false);
+        addListeners(txtPortNo, true);
+        addListeners(txtCompanyName, true);
+        addListeners(txtPassword, true);
+        addListeners(txtUsername, true);
         addListeners(btnClear, true);
         addListeners(btnCreate, true);
         addListeners(btnInstall, true);
+        addListeners(btnExit1, true);
+        addListeners(btnExit2, true);
 
 
         addVerifier(txtServerIp, "Enter the Server Ip");
@@ -387,9 +418,11 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 ((JTextField) txtField).addFocusListener(this);
         } else {
             ((JButton) txtField).addActionListener(this);
-            if (focusListener)
+            if (focusListener) {
                 ((JButton) txtField).addMouseListener(this);
+                ((JButton) txtField).addFocusListener(this);
 
+            }
         }
     }
 
@@ -426,7 +459,11 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (e.getSource() == btnCreate) {
+            if (e.getSource() == btnExit1 || e.getSource() == btnExit2)
+                System.exit(0);
+            else if (e.getSource() == btnClear)
+                clear();
+            else if (e.getSource() == btnCreate) {
                 if (txtServerIp.getText().isEmpty()) {
                     txtServerIp.requestFocusInWindow();
                     throw new Exception("Enter Server Ip");
@@ -463,7 +500,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 clear();
                 JOptionPane.showMessageDialog(getContentPane(), "CompanyCreated Sucessfully...");
                 tabMain.setSelectedIndex(1);
-
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(getContentPane(), ex.getMessage());
@@ -500,6 +536,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         fileWriter.write(Secutity.encrypter(txtUsername.getText()) + "\n");
         fileWriter.write(Secutity.encrypter(String.valueOf(txtPassword.getPassword())) + "\n");
         fileWriter.write(Secutity.encrypter(txtCompanyCode.getText()) + "\n");
+        fileWriter.write(Secutity.encrypter(txtCompanyName.getText()) + "\n");
         fileWriter.close();
 
     }
@@ -558,42 +595,47 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-        if (e.getSource() == btnCreate) {
-            btnCreate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            btnCreate.setForeground(Color.BLACK);
-            btnCreate.setBorderPainted(true);
-        }
-        if (e.getSource() == btnClear) {
-            btnClear.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            btnClear.setForeground(Color.BLACK);
-            btnClear.setBorderPainted(true);
-        }
-
-        if (e.getSource() == btnInstall) {
-            btnInstall.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            btnInstall.setForeground(Color.BLACK);
-            btnInstall.setBorderPainted(true);
+    private void setMouseEntered(JButton jButton, boolean isEntered) {
+        if (isEntered) {
+            jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            jButton.setForeground(Color.BLACK);
+            jButton.setBorderPainted(true);
+        } else {
+            jButton.setForeground(Color.WHITE);
+            jButton.setBorderPainted(false);
         }
 
     }
 
     @Override
+    public void mouseEntered(MouseEvent e) {
+
+        if (e.getSource() == btnCreate)
+            setMouseEntered(btnCreate, true);
+        else if (e.getSource() == btnClear)
+            setMouseEntered(btnClear, true);
+        else if (e.getSource() == btnInstall)
+            setMouseEntered(btnInstall, true);
+        else if (e.getSource() == btnExit1)
+            setMouseEntered(btnExit1, true);
+        else if (e.getSource() == btnExit2)
+            setMouseEntered(btnExit2, true);
+
+
+    }
+
+    @Override
     public void mouseExited(MouseEvent e) {
-        if (e.getSource() == btnCreate) {
-            btnCreate.setForeground(Color.WHITE);
-            btnCreate.setBorderPainted(false);
-        }
-        if (e.getSource() == btnClear) {
-            btnClear.setForeground(Color.WHITE);
-            btnClear.setBorderPainted(false);
-        }
-        if (e.getSource() == btnInstall) {
-            btnInstall.setForeground(Color.WHITE);
-            btnInstall.setBorderPainted(false);
-        }
+        if (e.getSource() == btnCreate)
+            setMouseEntered(btnCreate, false);
+        else if (e.getSource() == btnClear)
+            setMouseEntered(btnClear, false);
+        else if (e.getSource() == btnInstall)
+            setMouseEntered(btnInstall, false);
+        else if (e.getSource() == btnExit1)
+            setMouseEntered(btnExit1, false);
+        else if (e.getSource() == btnExit2)
+            setMouseEntered(btnExit2, false);
 
     }
 
