@@ -442,12 +442,23 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                     throw new Exception("Enter UsernName");
                 }
                 setTxtFileTiValues();
+                clear();
+                JOptionPane.showMessageDialog(getContentPane(),"CompanyCreated Sucessfully...");
 
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(getContentPane(), ex.getMessage());
             logger.error(ex.getMessage());
         }
+    }
+
+    private void clear(){
+        txtCompanyName.setText("");
+        txtCompanyCode.setText("");
+        txtServerIp.setText("");
+        txtPortNo.setText("");
+        txtUsername.setText("");
+        txtPassword.setText("");
     }
 
     private void setTxtFileTiValues() throws Exception {
@@ -462,15 +473,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     }
 
-    @Override
-    public void focusGained(FocusEvent e) {
 
-    }
-
-    @Override
-    public void focusLost(FocusEvent e) {
-
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -563,4 +566,38 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         }
 
     }
+    @Override
+    public void focusGained(FocusEvent e) {
+        if (e.getSource() == btnCreate) {
+            btnCreate.setForeground(Color.BLACK);
+            btnCreate.setBorderPainted(true);
+        }
+        if (e.getSource() == btnClear) {
+            btnClear.setForeground(Color.BLACK);
+            btnClear.setBorderPainted(true);
+        }
+
+        if (e.getSource() == btnInstall) {
+            btnInstall.setForeground(Color.BLACK);
+            btnInstall.setBorderPainted(true);
+        }
+
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        if (e.getSource() == btnCreate) {
+            btnCreate.setForeground(Color.WHITE);
+            btnCreate.setBorderPainted(false);
+        }
+        if (e.getSource() == btnClear) {
+            btnClear.setForeground(Color.WHITE);
+            btnClear.setBorderPainted(false);
+        }
+        if (e.getSource() == btnInstall) {
+            btnInstall.setForeground(Color.WHITE);
+            btnInstall.setBorderPainted(false);
+        }
+    }
+
 }
