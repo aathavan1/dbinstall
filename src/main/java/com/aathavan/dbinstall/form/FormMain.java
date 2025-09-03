@@ -1,8 +1,11 @@
 package com.aathavan.dbinstall.form;
 
 import com.aathavan.dbinstall.common.DbInstallCommon;
+import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.common.ImagesPath;
 import com.aathavan.dbinstall.common.Secutity;
+import com.aathavan.dbinstall.config.ConnectionConfig;
+import com.aathavan.dbinstall.model.ServerCredentials;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -122,7 +125,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         lblBackgroundImg.add(txtArea);
 
 
-        y = DbInstallCommon.verticalGap(panelDbInstall, txtArea, vGap/2);
+        y = DbInstallCommon.verticalGap(panelDbInstall, txtArea, vGap / 2);
 
         btnInstall = new JButton("Install");
         btnInstall.setBounds(getWidth() * 40 / 100, y, (int) (compWidth / 1.4), (int) (compHeight * 1.2));
@@ -295,6 +298,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 JOptionPane.showMessageDialog(getContentPane(), "Company Details Not Found... Create a New Company");
                 tabMain.setSelectedIndex(0);
             } else {
+
+
+
                 tabMain.setSelectedIndex(1);
             }
         } catch (Exception e) {
@@ -441,9 +447,22 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                     txtServerIp.requestFocusInWindow();
                     throw new Exception("Enter UsernName");
                 }
+
+                ServerCredentials serverCredentials = new ServerCredentials();
+                serverCredentials.setUsername(txtUsername.getText().trim());
+                serverCredentials.setPassword(String.valueOf(txtPassword.getPassword()).trim());
+                serverCredentials.setPortno(txtPortNo.getText().trim());
+                serverCredentials.setServerip(txtServerIp.getText().trim());
+
+                if (!checkServerCredentials(serverCredentials)) {
+                    txtServerIp.requestFocusInWindow();
+                    return;
+                }
+
                 setTxtFileTiValues();
                 clear();
-                JOptionPane.showMessageDialog(getContentPane(),"CompanyCreated Sucessfully...");
+                JOptionPane.showMessageDialog(getContentPane(), "CompanyCreated Sucessfully...");
+                tabMain.setSelectedIndex(1);
 
             }
         } catch (Exception ex) {
@@ -452,7 +471,19 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         }
     }
 
-    private void clear(){
+    private boolean checkServerCredentials(ServerCredentials serverCredentials) {
+        DbInstallConstant.setServerCredentials(serverCredentials);
+        try {
+            ConnectionConfig connectionConfig = new ConnectionConfig();
+            connectionConfig.checkDataSource();
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            return false;
+        }
+    }
+
+    private void clear() {
         txtCompanyName.setText("");
         txtCompanyCode.setText("");
         txtServerIp.setText("");
@@ -472,7 +503,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         fileWriter.close();
 
     }
-
 
 
     @Override
@@ -566,6 +596,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         }
 
     }
+
     @Override
     public void focusGained(FocusEvent e) {
         if (e.getSource() == btnCreate) {
