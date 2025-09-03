@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -21,8 +24,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private JTextField txtServerIp, txtCompanyName, txtCompanyCode, txtPortNo, txtUsername;
 
     private JPasswordField txtPassword;
+    private JTextArea txtArea;
 
-    private JButton btnCreate, btnClear;
+    private JButton btnCreate, btnClear, btnInstall;
 
     private JTabbedPane tabMain;
 
@@ -58,9 +62,30 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private void componentCreation() {
 
-        JPanel panelCompanyCreation, panelDbInstall;
-        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode,
-                lblCompanyCreationImg, lblDbInstallImg, lblExit,lblDbInstallHeading;
+        JPanel panelDbInstall;
+
+
+        tabMain = new JTabbedPane();
+        tabMain.setBounds(-2, -25, getWidth() + 5, getHeight() + 28);
+        getContentPane().add(tabMain);
+
+        panelCompanyCreation();
+        panelDbInstallCreation();
+
+        panelDbInstall = new JPanel(null);
+        panelDbInstall.setBounds(0, 0, getWidth(), getHeight());
+        panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
+        tabMain.add(panelDbInstall);
+
+
+        repaint();
+
+    }
+
+    private void panelDbInstallCreation() {
+        JPanel panelDbInstall;
+
+        JLabel lblBackgroundImg, lblHeading;
 
         Font font = new Font("Times New Roman", Font.PLAIN, 15);
 
@@ -71,9 +96,58 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         int x, y;
 
 
-        tabMain = new JTabbedPane();
-        tabMain.setBounds(-2, -25, getWidth() + 5, getHeight() + 28);
-        getContentPane().add(tabMain);
+        panelDbInstall = new JPanel(null);
+        panelDbInstall.setBounds(0, 0, getWidth(), getHeight());
+        panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
+        tabMain.add(panelDbInstall);
+
+        lblBackgroundImg = new JLabel();
+        lblBackgroundImg.setBounds(0, 0, panelDbInstall.getWidth(), panelDbInstall.getHeight());
+        lblBackgroundImg.setIcon(backgroundImageIcon);
+        panelDbInstall.add(lblBackgroundImg);
+
+
+        lblHeading = new JLabel("DATABASE INSTALL");
+        lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
+        lblHeading.setFont(new Font("Roboto", Font.BOLD, 40));
+        lblHeading.setForeground(Color.decode("#964B00"));
+        lblBackgroundImg.add(lblHeading);
+
+        y = DbInstallCommon.verticalGap(panelDbInstall, lblHeading, vGap);
+
+        txtArea = new JTextArea();
+        txtArea.setBounds(getWidth() * 15 / 100, y, getWidth() * 70 / 100, getHeight() * 70 / 100);
+//        txtArea.setBorder(BorderFactory.createLineBorder(2,2,2,2));
+        txtArea.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(5, 5, 5, 5)));
+        lblBackgroundImg.add(txtArea);
+
+
+        y = DbInstallCommon.verticalGap(panelDbInstall, txtArea, vGap/2);
+
+        btnInstall = new JButton("Install");
+        btnInstall.setBounds(getWidth() * 40 / 100, y, (int) (compWidth / 1.4), (int) (compHeight * 1.2));
+        btnInstall.setForeground(Color.white);
+        btnInstall.setFont(font);
+        btnInstall.setBackground(Color.decode("#4b7abd"));
+        btnInstall.setBorderPainted(false);
+        btnInstall.setVerifyInputWhenFocusTarget(false);
+        lblBackgroundImg.add(btnInstall);
+
+    }
+
+    private void panelCompanyCreation() {
+        JPanel panelCompanyCreation;
+
+        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode,
+                lblCompanyCreationImg, lblDbInstallImg, lblExit, lblHeading;
+
+        Font font = new Font("Times New Roman", Font.PLAIN, 15);
+
+        int compWidth = getWidth() * 20 / 100;
+        int compHeight = getHeight() * 4 / 100;
+        int txtCompWidth = (int) (compWidth * 1.2);
+        double hGap = 1.1, vGap = 7.1;
+        int x, y;
 
 
         panelCompanyCreation = new JPanel(null);
@@ -81,28 +155,17 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         panelCompanyCreation.setBorder(BorderFactory.createLineBorder(Color.blue));
         tabMain.add(panelCompanyCreation);
 
-        panelDbInstall = new JPanel(null);
-        panelDbInstall.setBounds(0, 0, getWidth(), getHeight());
-        panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
-        tabMain.add(panelDbInstall);
-
-
         lblCompanyCreationImg = new JLabel();
         lblCompanyCreationImg.setBounds(0, 0, panelCompanyCreation.getWidth(), panelCompanyCreation.getHeight());
         lblCompanyCreationImg.setIcon(backgroundImageIcon);
         panelCompanyCreation.add(lblCompanyCreationImg);
 
 
-//        lblExit=new JLabel();
-//        lblExit.setBounds();
-//        lblExit.set
-
-
-        lblDbInstallHeading = new JLabel("COMPANY CREATION");
-        lblDbInstallHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth*5, compHeight);
-        lblDbInstallHeading.setFont(new Font("Roboto", Font.BOLD, 40));
-        lblDbInstallHeading.setForeground(Color.decode("#964B00"));
-        lblCompanyCreationImg.add(lblDbInstallHeading);
+        lblHeading = new JLabel("COMPANY CREATION");
+        lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
+        lblHeading.setFont(new Font("Roboto", Font.BOLD, 40));
+        lblHeading.setForeground(Color.decode("#964B00"));
+        lblCompanyCreationImg.add(lblHeading);
 
 
         lblServerIp = new JLabel("Server Ip");
@@ -222,8 +285,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         btnCreate.setBorderPainted(false);
         lblCompanyCreationImg.add(btnCreate);
 
-        repaint();
-
     }
 
 
@@ -248,6 +309,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         componentCreation();
         compoundListener();
         fileRead();
+        if (tabMain.getSelectedIndex() == 0)
+            txtServerIp.requestFocusInWindow();
 
 
     }
@@ -260,14 +323,13 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         addListeners(txtUsername, false);
         addListeners(btnClear, true);
         addListeners(btnCreate, true);
+        addListeners(btnInstall, true);
 
 
         addVerifier(txtServerIp, "Enter the Server Ip");
         addVerifier(txtPortNo, "Enter PORT");
-        addVerifier(txtCompanyName, "Enter Company Name");
         addVerifier(txtPassword, "Enter Password");
         addVerifier(txtUsername, "Enter UserName");
-        txtServerIp.requestFocusInWindow();
         txtCompanyName.setInputVerifier(new InputVerifier() {
             @Override
             public boolean verify(JComponent input) {
@@ -279,7 +341,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                         throw new Exception("CompanyName Should Have Minimum of 3 Characters");
 
                     txtCompanyCode.setText(txtCompanyName.getText().toLowerCase().substring(0, 3));
-
+                    btnCreate.requestFocusInWindow();
 
                     return true;
                 } catch (Exception e) {
@@ -402,16 +464,11 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     @Override
     public void focusGained(FocusEvent e) {
-        if (e.getComponent() == btnCreate)
-            btnCreate.setBackground(Color.BLUE);
 
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-
-        if (e.getComponent() == btnCreate)
-            btnCreate.setBackground(Color.white);
 
     }
 
@@ -434,11 +491,12 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                         txtPortNo.requestFocusInWindow();
                     else if (e.getComponent() == txtPortNo)
                         txtCompanyName.requestFocusInWindow();
-                    else if (e.getComponent() == txtCompanyName)
+                    else if (e.getComponent() == txtCompanyName) {
+                        btnCreate.setEnabled(true);
                         btnCreate.requestFocusInWindow();
-                    else if (e.getComponent() == btnCreate)
+                    } else if (e.getComponent() == btnCreate) {
                         btnCreate.doClick();
-                    else if (e.getComponent() == btnClear)
+                    } else if (e.getComponent() == btnClear)
                         btnClear.doClick();
                 }
             }
@@ -481,6 +539,12 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
             btnClear.setBorderPainted(true);
         }
 
+        if (e.getSource() == btnInstall) {
+            btnInstall.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            btnInstall.setForeground(Color.BLACK);
+            btnInstall.setBorderPainted(true);
+        }
+
     }
 
     @Override
@@ -492,6 +556,10 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         if (e.getSource() == btnClear) {
             btnClear.setForeground(Color.WHITE);
             btnClear.setBorderPainted(false);
+        }
+        if (e.getSource() == btnInstall) {
+            btnInstall.setForeground(Color.WHITE);
+            btnInstall.setBorderPainted(false);
         }
 
     }
