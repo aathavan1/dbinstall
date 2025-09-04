@@ -10,6 +10,8 @@ public class MySqlTable {
     private String tablename;
     private String constrains = null;
     private boolean procedure = false;
+
+
     private List<MySqlColumns> lstColumns = new LinkedList<>();
 
 
@@ -27,6 +29,10 @@ public class MySqlTable {
 
     public String getTablename() {
         return tablename;
+    }
+
+    public List<MySqlColumns> getLstColumns() {
+        return lstColumns;
     }
 
 

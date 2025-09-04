@@ -467,8 +467,10 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 System.exit(0);
             else if (e.getSource() == btnClear)
                 clear();
-            else if (e.getSource() == btnInstall)
+            else if (e.getSource() == btnInstall) {
                 installService.installTables();
+            JOptionPane.showMessageDialog(getContentPane(),"Completed Sucessfully...");
+            }
 
             else if (e.getSource() == btnCreate) {
                 if (txtServerIp.getText().isEmpty()) {

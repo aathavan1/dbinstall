@@ -1,5 +1,6 @@
 package com.aathavan.dbinstall.install;
 
+import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.model.MySqlTable;
 import com.aathavan.dbinstall.service.DbInstallService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class InstallLogic {
 
 
     public void installTables() throws Exception {
-        dbInstallService.installTable(getMasterTables(), "aathav");
+        dbInstallService.installTable(getMasterTables(), DbInstallConstant.getServerCredentials().getCompanycode()+"amaster");
     }
 
 

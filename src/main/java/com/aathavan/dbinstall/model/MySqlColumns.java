@@ -6,6 +6,7 @@ public class MySqlColumns {
 
     private int length;
     private int scale;
+
     private String columnname;
     private CommonEnum.DATATYPE dataType;
     private CommonEnum.NULLABLE nullable;
@@ -26,6 +27,11 @@ public class MySqlColumns {
         this.length = length;
         this.unique = unique;
     }
+
+    public String getColumnname() {
+        return columnname;
+    }
+
 
 
     public String getColumn() {
@@ -51,6 +57,9 @@ public class MySqlColumns {
             }
             case DATE -> {
                 return "date";
+            }
+            case VARCHAR -> {
+                return "varchar";
             }
             case DATETIME -> {
                 return "datetime";
