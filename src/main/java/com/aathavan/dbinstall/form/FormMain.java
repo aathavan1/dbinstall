@@ -312,8 +312,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 JOptionPane.showMessageDialog(getContentPane(), "Company Details Not Found... Create a New Company");
                 tabMain.setSelectedIndex(0);
             } else {
-
-
                 List<String> fileDetail = Files.readAllLines(Paths.get(file.toURI()));
 
                 ServerCredentials serverCredentials = new ServerCredentials();

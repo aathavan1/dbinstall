@@ -5,43 +5,57 @@ import com.aathavan.dbinstall.common.CommonEnum;
 public class MySqlColumns {
 
     private int length;
+    private int scale;
     private String columnname;
-    private CommonEnum.DataType dataType;
-    private CommonEnum.Nullable nullable;
-    private CommonEnum.Uniquekey uniquekey;
+    private CommonEnum.DATATYPE dataType;
+    private CommonEnum.NULLABLE nullable;
+    private CommonEnum.unique unique;
 
-    public MySqlColumns(String columnname, CommonEnum.DataType dataType, CommonEnum.Nullable nullable, CommonEnum.Uniquekey uniquekey) {
+
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, CommonEnum.NULLABLE nullable, CommonEnum.unique unique) {
         this.columnname = columnname;
         this.dataType = dataType;
         this.nullable = nullable;
-        this.uniquekey = uniquekey;
+        this.unique = unique;
     }
 
-    public MySqlColumns(String columnname, CommonEnum.DataType dataType, int length, CommonEnum.Nullable nullable, CommonEnum.Uniquekey uniquekey) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, int length, CommonEnum.NULLABLE nullable, CommonEnum.unique unique) {
         this.columnname = columnname;
         this.dataType = dataType;
         this.nullable = nullable;
         this.length = length;
-        this.uniquekey = uniquekey;
+        this.unique = unique;
     }
 
-    public int getLength() {
-        return length;
+
+    public String getColumn() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(columnname).append(" ").append(getDataTypes());
+        if (length > 0)
+            sb.append("(").append(length).append(scale > 0 ? " ," + scale + " )" : " )");
+        if (nullable == CommonEnum.NULLABLE.NO)
+            sb.append(" not null ");
+        if (unique == CommonEnum.unique.YES)
+            sb.append(" unique ");
+
+        return sb.toString();
     }
 
-    public String getColumnname() {
-        return columnname;
-    }
-
-    public CommonEnum.DataType getDataType() {
-        return dataType;
-    }
-
-    public CommonEnum.Nullable getNullable() {
-        return nullable;
-    }
-
-    public CommonEnum.Uniquekey getUniquekey() {
-        return uniquekey;
+    private String getDataTypes() {
+        switch (dataType) {
+            case INT -> {
+                return "int";
+            }
+            case DECIMAL -> {
+                return "decimal";
+            }
+            case DATE -> {
+                return "date";
+            }
+            case DATETIME -> {
+                return "datetime";
+            }
+        }
+        return "";
     }
 }

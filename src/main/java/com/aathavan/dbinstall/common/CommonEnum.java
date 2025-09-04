@@ -18,25 +18,16 @@ public class CommonEnum {
         }
     }
 
-    public enum DataType {
-        VARCHAR("varchar"), INT("int"), DATE("date"), DATETIME("datetime"), DECIMAL("decimal");
-        String value = "";
-
-        DataType(String type) {
-            value = type;
-        }
-
-        public String getDataTypeValue() {
-            return value;
-        }
+    public enum DATATYPE {
+        VARCHAR, INT, DATE, DATETIME, DECIMAL
     }
 
-    public enum Nullable {
-        YES, NO;
+    public enum NULLABLE {
+        YES, NO
     }
 
-    public enum Uniquekey {
-        YES, NO;
+    public enum unique {
+        YES, NO
     }
 
 }

@@ -20,7 +20,7 @@ public class InstallLogic {
 
 
     public void installTables() throws Exception {
-        dbInstallService.installTable(getMasterTables());
+        dbInstallService.installTable(getMasterTables(), "aathav");
     }
 
 

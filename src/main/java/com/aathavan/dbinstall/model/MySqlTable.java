@@ -29,16 +29,14 @@ public class MySqlTable {
         return tablename;
     }
 
-    public String getConstrains() {
-        return constrains;
-    }
 
-    public boolean isProcedure() {
-        return procedure;
-    }
-
-    public List<MySqlColumns> getLstColumns() {
-        return lstColumns;
+    public String getTable() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("create table ").append(tablename).append(" (");
+        for (MySqlColumns mySqlColumns : lstColumns) {
+            sb.append(mySqlColumns.getColumn()).append(" ,");
+        }
+        return sb.substring(0, sb.toString().length() - 1) + ")";
     }
 
 }
