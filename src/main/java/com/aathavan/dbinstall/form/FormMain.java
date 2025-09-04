@@ -5,8 +5,10 @@ import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.common.CommonEnum;
 import com.aathavan.dbinstall.common.Secutity;
 import com.aathavan.dbinstall.config.ConnectionConfig;
+import com.aathavan.dbinstall.install.InstallLogic;
 import com.aathavan.dbinstall.model.ServerCredentials;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -38,6 +40,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private final Logger logger = Logger.getLogger(FormMain.class);
     private ImageIcon backgroundImageIcon = null;
+
+    @Autowired
+    private InstallLogic installService;
 
     public FormMain() {
 
@@ -233,6 +238,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         lblCompanyCreationImg.add(btnExit1);
 
     }
+
     private void panelDbInstallCreation() {
         JPanel panelDbInstall;
 
@@ -463,6 +469,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 System.exit(0);
             else if (e.getSource() == btnClear)
                 clear();
+            else if (e.getSource() == btnInstall)
+                installService.installTables();
+
             else if (e.getSource() == btnCreate) {
                 if (txtServerIp.getText().isEmpty()) {
                     txtServerIp.requestFocusInWindow();

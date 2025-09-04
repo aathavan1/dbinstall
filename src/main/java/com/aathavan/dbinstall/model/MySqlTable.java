@@ -6,6 +6,7 @@ import java.util.List;
 
 public class MySqlTable {
 
+
     private String tablename;
     private String constrains = null;
     private boolean procedure = false;
@@ -24,5 +25,20 @@ public class MySqlTable {
         this.constrains = constrain;
     }
 
+    public String getTablename() {
+        return tablename;
+    }
+
+    public String getConstrains() {
+        return constrains;
+    }
+
+    public boolean isProcedure() {
+        return procedure;
+    }
+
+    public List<MySqlColumns> getLstColumns() {
+        return lstColumns;
+    }
 
 }

@@ -8,17 +8,40 @@ public class MySqlColumns {
     private String columnname;
     private CommonEnum.DataType dataType;
     private CommonEnum.Nullable nullable;
+    private CommonEnum.Uniquekey uniquekey;
 
-    MySqlColumns(String columnname, CommonEnum.DataType dataType, CommonEnum.Nullable nullable) {
+    public MySqlColumns(String columnname, CommonEnum.DataType dataType, CommonEnum.Nullable nullable, CommonEnum.Uniquekey uniquekey) {
         this.columnname = columnname;
         this.dataType = dataType;
         this.nullable = nullable;
+        this.uniquekey = uniquekey;
     }
 
-    MySqlColumns(String columnname, CommonEnum.DataType dataType, int length, CommonEnum.Nullable nullable) {
+    public MySqlColumns(String columnname, CommonEnum.DataType dataType, int length, CommonEnum.Nullable nullable, CommonEnum.Uniquekey uniquekey) {
         this.columnname = columnname;
         this.dataType = dataType;
         this.nullable = nullable;
         this.length = length;
+        this.uniquekey = uniquekey;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getColumnname() {
+        return columnname;
+    }
+
+    public CommonEnum.DataType getDataType() {
+        return dataType;
+    }
+
+    public CommonEnum.Nullable getNullable() {
+        return nullable;
+    }
+
+    public CommonEnum.Uniquekey getUniquekey() {
+        return uniquekey;
     }
 }
