@@ -26,7 +26,11 @@ public class CommonEnum {
         YES, NO
     }
 
-    public enum unique {
+    public enum UNIQUEKEY {
+        YES, NO
+    }
+
+    public enum PRIMARYKEY {
         YES, NO
     }
 

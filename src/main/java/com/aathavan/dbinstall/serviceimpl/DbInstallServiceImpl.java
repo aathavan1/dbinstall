@@ -3,9 +3,11 @@ package com.aathavan.dbinstall.serviceimpl;
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.config.ConnectionConfig;
 import com.aathavan.dbinstall.dao.DbInstallDao;
+import com.aathavan.dbinstall.form.FormMain;
 import com.aathavan.dbinstall.model.MySqlColumns;
 import com.aathavan.dbinstall.model.MySqlTable;
 import com.aathavan.dbinstall.service.DbInstallService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -16,34 +18,59 @@ import java.util.List;
 @Component
 public class DbInstallServiceImpl implements DbInstallService {
 
+    private final Logger logger = Logger.getLogger(DbInstallServiceImpl.class);
 
     @Autowired
     private DbInstallDao dbInstallDao;
 
 
     @Override
-    public void installTable(List<MySqlTable> tableName, String dbName) throws Exception {
-        List<String> installQuery = new LinkedList<>();
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DbInstallConstant.getDataSource());
-        boolean isFreshDb = !dbInstallDao.checkExist(prepareStringForDbExist(dbName), jdbcTemplate);
-        if (isFreshDb) {
-            dbInstallDao.executeQuery("create database " + dbName, jdbcTemplate);
-        }
-        JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(new ConnectionConfig().getDbDataSource(dbName));
+    public void installTable(List<MySqlTable> lstMasterTables, String dbName) {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(DbInstallConstant.getDataSource());
+            boolean isFreshDb = !dbInstallDao.checkExist(prepareStringForDbExist(dbName), jdbcTemplate);
+            if (isFreshDb) {
+                FormMain.setTextArea("Creating DataBase " + dbName);
+                dbInstallDao.executeQuery("CREATE DATABASE " + dbName, jdbcTemplate);
+            }
+            JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(new ConnectionConfig().getDbDataSource(dbName));
+
+            List<MySqlTable> lstAlterTables = new LinkedList<>();
+            List<MySqlTable> lstInstallTables = new LinkedList<>();
+
+            for (MySqlTable mySqlTable : lstMasterTables) {
+                if (isFreshDb || !prepareStringForTableExist(mySqlTable.getTablename(), jdbcTemplateForDb)) {
+                    lstInstallTables.add(mySqlTable);
+                } else {
+                    lstAlterTables.add(mySqlTable);
+                }
+            }
 
 
-        for (MySqlTable mySqlTable : tableName) {
-            if (isFreshDb || !prepareStringForTableExist(mySqlTable.getTablename(), jdbcTemplateForDb)) {
-
+            FormMain.setTextArea("Creating Missing Table Process Starts");
+            for (MySqlTable mySqlTable : lstInstallTables) {
+                FormMain.getjProgressBar().setValue((lstInstallTables.indexOf(mySqlTable) * 100) / lstInstallTables.size());
+                FormMain.setTextArea("Creating Table " + mySqlTable.getTablename());
                 dbInstallDao.executeQuery(mySqlTable.getTable(), jdbcTemplateForDb);
-            } else {
+            }
+            FormMain.setTextArea("Creating Missing Table Process Ends");
+
+            FormMain.setTextArea("Alter Table Process Starts");
+            for (MySqlTable mySqlTable : lstAlterTables) {
+                FormMain.getjProgressBar().setValue((lstAlterTables.indexOf(mySqlTable) * 100) / lstAlterTables.size());
+                FormMain.setTextArea("Altering Table " + mySqlTable.getTablename());
                 mySqlAlterColumnProcess(mySqlTable, dbName, jdbcTemplateForDb);
             }
+            FormMain.setTextArea("Alter Table Process Ends");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            FormMain.setTextArea(e.getMessage());
         }
+
     }
 
     private boolean prepareStringForTableExist(String tableName, JdbcTemplate jdbcTemplate) throws Exception {
-        return dbInstallDao.checkExist("show tables like '" + tableName + "' ", jdbcTemplate);
+        return dbInstallDao.checkExist("SHOW TABLES LIKE '" + tableName + "' ", jdbcTemplate);
     }
 
     private String prepareStringForDbExist(String dbName) {
@@ -59,7 +86,7 @@ public class DbInstallServiceImpl implements DbInstallService {
     private void mySqlAlterColumnProcess(MySqlTable mySqlTable, String dbName, JdbcTemplate jdbcTemplate) throws Exception {
         for (MySqlColumns mySqlColumns : mySqlTable.getLstColumns()) {
             if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName)) {
-                String alterQuery = "alter table " + mySqlTable.getTablename() + " add column " + mySqlColumns.getColumn();
+                String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ADD COLUMN " + mySqlColumns.getColumn();
                 dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
             }
         }

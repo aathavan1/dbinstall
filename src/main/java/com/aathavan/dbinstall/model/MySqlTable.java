@@ -1,6 +1,5 @@
 package com.aathavan.dbinstall.model;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,7 +39,11 @@ public class MySqlTable {
         StringBuilder sb = new StringBuilder();
         sb.append("create table ").append(tablename).append(" (");
         for (MySqlColumns mySqlColumns : lstColumns) {
-            sb.append(mySqlColumns.getColumn()).append(" ,");
+            sb.append(mySqlColumns.getColumn()).append(" ,\n");
+        }
+        if (constrains != null) {
+            sb.append(constrains).append(")");
+            return sb.toString();
         }
         return sb.substring(0, sb.toString().length() - 1) + ")";
     }

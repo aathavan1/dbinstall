@@ -36,6 +36,11 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private JTabbedPane tabMain;
 
+    public static JProgressBar getjProgressBar() {
+        lblProgressPer.setText(jProgressBar.getValue() + "%");
+        return jProgressBar;
+    }
+
     private static JProgressBar jProgressBar;
 
     private static JLabel lblProgressPer;
@@ -63,12 +68,10 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         addWindowListener(this);
         try {
             BufferedImage bufferedImage = null;
-            if (classLoader.resources(CommonEnum.Image.LOGO_ICON.getValue()) != null
-                    && ImageIO.read(Objects.requireNonNull(classLoader.getResource(CommonEnum.Image.LOGO_ICON.getValue()))) != null) {
+            if (classLoader.resources(CommonEnum.Image.LOGO_ICON.getValue()) != null && ImageIO.read(Objects.requireNonNull(classLoader.getResource(CommonEnum.Image.LOGO_ICON.getValue()))) != null) {
                 bufferedImage = ImageIO.read(Objects.requireNonNull(classLoader.getResource(CommonEnum.Image.LOGO_ICON.getValue())));
             }
-            if (bufferedImage != null)
-                setIconImage(bufferedImage);
+            if (bufferedImage != null) setIconImage(bufferedImage);
 
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -102,8 +105,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private void panelCompanyCreation() {
         JPanel panelCompanyCreation;
 
-        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode,
-                lblCompanyCreationImg, lblDbInstallImg, lblExit, lblHeading;
+        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode, lblCompanyCreationImg, lblDbInstallImg, lblExit, lblHeading;
 
         Font font = new Font("Times New Roman", Font.PLAIN, 15);
 
@@ -376,8 +378,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         componentCreation();
         compoundListener();
         fileRead();
-        if (tabMain.getSelectedIndex() == 0)
-            txtServerIp.requestFocusInWindow();
+        if (tabMain.getSelectedIndex() == 0) txtServerIp.requestFocusInWindow();
 
 
     }
@@ -446,8 +447,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
         if (txtField instanceof JTextField) {
             ((JTextField) txtField).addKeyListener(this);
-            if (focusListener)
-                ((JTextField) txtField).addFocusListener(this);
+            if (focusListener) ((JTextField) txtField).addFocusListener(this);
         } else {
             ((JButton) txtField).addActionListener(this);
             if (focusListener) {
@@ -590,19 +590,15 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 case KeyEvent.VK_ENTER -> {
                     if (e.getComponent() == txtServerIp) {
                         txtUsername.requestFocusInWindow();
-                    } else if (e.getComponent() == txtUsername)
-                        txtPassword.requestFocusInWindow();
-                    else if (e.getComponent() == txtPassword)
-                        txtPortNo.requestFocusInWindow();
-                    else if (e.getComponent() == txtPortNo)
-                        txtCompanyName.requestFocusInWindow();
+                    } else if (e.getComponent() == txtUsername) txtPassword.requestFocusInWindow();
+                    else if (e.getComponent() == txtPassword) txtPortNo.requestFocusInWindow();
+                    else if (e.getComponent() == txtPortNo) txtCompanyName.requestFocusInWindow();
                     else if (e.getComponent() == txtCompanyName) {
                         btnCreate.setEnabled(true);
                         btnCreate.requestFocusInWindow();
                     } else if (e.getComponent() == btnCreate) {
                         btnCreate.doClick();
-                    } else if (e.getComponent() == btnClear)
-                        btnClear.doClick();
+                    } else if (e.getComponent() == btnClear) btnClear.doClick();
                 }
             }
         } catch (Exception ex) {
@@ -645,32 +641,22 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     @Override
     public void mouseEntered(MouseEvent e) {
 
-        if (e.getSource() == btnCreate)
-            setMouseEntered(btnCreate, true);
-        else if (e.getSource() == btnClear)
-            setMouseEntered(btnClear, true);
-        else if (e.getSource() == btnInstall)
-            setMouseEntered(btnInstall, true);
-        else if (e.getSource() == btnExit1)
-            setMouseEntered(btnExit1, true);
-        else if (e.getSource() == btnExit2)
-            setMouseEntered(btnExit2, true);
+        if (e.getSource() == btnCreate) setMouseEntered(btnCreate, true);
+        else if (e.getSource() == btnClear) setMouseEntered(btnClear, true);
+        else if (e.getSource() == btnInstall) setMouseEntered(btnInstall, true);
+        else if (e.getSource() == btnExit1) setMouseEntered(btnExit1, true);
+        else if (e.getSource() == btnExit2) setMouseEntered(btnExit2, true);
 
 
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (e.getSource() == btnCreate)
-            setMouseEntered(btnCreate, false);
-        else if (e.getSource() == btnClear)
-            setMouseEntered(btnClear, false);
-        else if (e.getSource() == btnInstall)
-            setMouseEntered(btnInstall, false);
-        else if (e.getSource() == btnExit1)
-            setMouseEntered(btnExit1, false);
-        else if (e.getSource() == btnExit2)
-            setMouseEntered(btnExit2, false);
+        if (e.getSource() == btnCreate) setMouseEntered(btnCreate, false);
+        else if (e.getSource() == btnClear) setMouseEntered(btnClear, false);
+        else if (e.getSource() == btnInstall) setMouseEntered(btnInstall, false);
+        else if (e.getSource() == btnExit1) setMouseEntered(btnExit1, false);
+        else if (e.getSource() == btnExit2) setMouseEntered(btnExit2, false);
 
     }
 
@@ -708,13 +694,14 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         }
     }
 
+    public static void setTextArea(String txtMessage) {
+        txtArea.setText(txtArea.getText() + "\n" + txtMessage);
+    }
+
     public static JLabel getLblTimer() {
         return lblTimer;
     }
 
-    public static JLabel getLblProgressPer() {
-        return lblProgressPer;
-    }
 
     private class installProgress extends SwingWorker<String, String> {
 

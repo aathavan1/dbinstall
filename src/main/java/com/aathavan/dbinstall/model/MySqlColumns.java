@@ -9,23 +9,31 @@ public class MySqlColumns {
 
     private String columnname;
     private CommonEnum.DATATYPE dataType;
-    private CommonEnum.NULLABLE nullable;
-    private CommonEnum.unique unique;
+    private CommonEnum.NULLABLE NULLABLE = CommonEnum.NULLABLE.YES;
+    private CommonEnum.UNIQUEKEY UNIQUEKEY = CommonEnum.UNIQUEKEY.NO;
+    private CommonEnum.PRIMARYKEY PRIMARYKEY = CommonEnum.PRIMARYKEY.NO;
 
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, CommonEnum.NULLABLE nullable, CommonEnum.unique unique) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
         this.columnname = columnname;
         this.dataType = dataType;
-        this.nullable = nullable;
-        this.unique = unique;
+        this.NULLABLE = NULLABLE;
+        this.UNIQUEKEY = UNIQUEKEY;
     }
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, int length, CommonEnum.NULLABLE nullable, CommonEnum.unique unique) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.PRIMARYKEY unique) {
         this.columnname = columnname;
         this.dataType = dataType;
-        this.nullable = nullable;
+        this.NULLABLE = NULLABLE;
+        this.PRIMARYKEY = unique;
+    }
+
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, int length, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
+        this.columnname = columnname;
+        this.dataType = dataType;
+        this.NULLABLE = NULLABLE;
         this.length = length;
-        this.unique = unique;
+        this.UNIQUEKEY = UNIQUEKEY;
     }
 
     public String getColumnname() {
@@ -33,16 +41,17 @@ public class MySqlColumns {
     }
 
 
-
     public String getColumn() {
         StringBuilder sb = new StringBuilder();
         sb.append(columnname).append(" ").append(getDataTypes());
         if (length > 0)
             sb.append("(").append(length).append(scale > 0 ? " ," + scale + " )" : " )");
-        if (nullable == CommonEnum.NULLABLE.NO)
-            sb.append(" not null ");
-        if (unique == CommonEnum.unique.YES)
-            sb.append(" unique ");
+        if (NULLABLE == CommonEnum.NULLABLE.NO)
+            sb.append(" NOT NULL ");
+        if (UNIQUEKEY == CommonEnum.UNIQUEKEY.YES)
+            sb.append(" UNIQUE ");
+        if (PRIMARYKEY == CommonEnum.PRIMARYKEY.YES)
+            sb.append(" PRIMARYKEY ");
 
         return sb.toString();
     }
@@ -50,19 +59,19 @@ public class MySqlColumns {
     private String getDataTypes() {
         switch (dataType) {
             case INT -> {
-                return "int";
+                return "INT";
             }
             case DECIMAL -> {
-                return "decimal";
+                return "DECIMAL";
             }
             case DATE -> {
-                return "date";
+                return "DATE";
             }
             case VARCHAR -> {
-                return "varchar";
+                return "VARCHAR";
             }
             case DATETIME -> {
-                return "datetime";
+                return "DATETIME";
             }
         }
         return "";
