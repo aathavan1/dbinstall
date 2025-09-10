@@ -1,9 +1,6 @@
 package com.aathavan.dbinstall.form;
 
-import com.aathavan.dbinstall.common.DbInstallCommon;
-import com.aathavan.dbinstall.common.DbInstallConstant;
-import com.aathavan.dbinstall.common.CommonEnum;
-import com.aathavan.dbinstall.common.Secutity;
+import com.aathavan.dbinstall.common.*;
 import com.aathavan.dbinstall.config.ConnectionConfig;
 import com.aathavan.dbinstall.install.InstallLogic;
 import com.aathavan.dbinstall.model.ServerCredentials;
@@ -25,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
 
 @Component
 public class FormMain extends JFrame implements WindowListener, KeyListener, ActionListener, FocusListener, MouseListener {
@@ -32,11 +30,18 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private JTextField txtServerIp, txtCompanyName, txtCompanyCode, txtPortNo, txtUsername;
 
     private JPasswordField txtPassword;
-    private JTextArea txtArea;
+    private static JTextArea txtArea;
 
     private JButton btnCreate, btnClear, btnInstall, btnExit1, btnExit2;
 
     private JTabbedPane tabMain;
+
+    private static JProgressBar jProgressBar;
+
+    private static JLabel lblProgressPer;
+
+
+    private static JLabel lblTimer;
 
     private final Logger logger = Logger.getLogger(FormMain.class);
     private ImageIcon backgroundImageIcon = null;
@@ -241,8 +246,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private void panelDbInstallCreation() {
         JPanel panelDbInstall;
-
         JLabel lblBackgroundImg, lblHeading;
+        JScrollPane scrPanel;
 
         Font font = new Font("Times New Roman", Font.PLAIN, 15);
 
@@ -273,13 +278,36 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         y = DbInstallCommon.verticalGap(panelDbInstall, lblHeading, vGap);
 
         txtArea = new JTextArea();
-        txtArea.setBounds(getWidth() * 15 / 100, y, getWidth() * 70 / 100, getHeight() * 70 / 100);
-//        txtArea.setBorder(BorderFactory.createLineBorder(2,2,2,2));
-        txtArea.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(5, 5, 5, 5)));
-        lblBackgroundImg.add(txtArea);
+        txtArea.setEnabled(false);
+
+        scrPanel = new JScrollPane(txtArea);
+        scrPanel.setBounds(getWidth() * 15 / 100, y, getWidth() * 70 / 100, getHeight() * 60 / 100);
+        scrPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(5, 5, 5, 5)));
+        lblBackgroundImg.add(scrPanel);
+
+        y = DbInstallCommon.verticalGap(panelDbInstall, scrPanel, vGap / 2);
+
+        jProgressBar = new JProgressBar(0, 100);
+        jProgressBar.setBounds(scrPanel.getX(), y, scrPanel.getWidth() * 90 / 100, scrPanel.getHeight() * 10 / 100);
+        lblBackgroundImg.add(jProgressBar);
+
+        x = DbInstallCommon.horizontalGap(panelDbInstall, jProgressBar, hGap);
+
+        lblTimer = new JLabel("");
+        lblTimer.setBounds(x, y, compWidth, compHeight);
+        lblTimer.setFont(font);
+        lblBackgroundImg.add(lblTimer);
+
+        y = DbInstallCommon.verticalGap(panelDbInstall, jProgressBar, vGap / 6);
+
+        lblProgressPer = new JLabel("sdsf");
+        lblProgressPer.setBounds((int) (jProgressBar.getWidth() / 1.5), y, compWidth / 2, compHeight / 3);
+        lblProgressPer.setFont(font);
+        lblBackgroundImg.add(lblProgressPer);
 
 
-        y = DbInstallCommon.verticalGap(panelDbInstall, txtArea, vGap / 2);
+        y = DbInstallCommon.verticalGap(panelDbInstall, lblProgressPer, vGap / 2);
+
 
         btnInstall = btnCreation("Install", getWidth() * 40 / 100, y, (int) (compWidth / 1.6), (int) (compHeight * 1.2), false, font);
         lblBackgroundImg.add(btnInstall);
@@ -463,16 +491,14 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (e.getSource() == btnExit1 || e.getSource() == btnExit2)
+            if (e.getSource() == btnExit1 || e.getSource() == btnExit2) {
                 System.exit(0);
-            else if (e.getSource() == btnClear)
+            } else if (e.getSource() == btnClear) {
                 clear();
-            else if (e.getSource() == btnInstall) {
-                installService.installTables();
-            JOptionPane.showMessageDialog(getContentPane(),"Completed Sucessfully...");
-            }
-
-            else if (e.getSource() == btnCreate) {
+            } else if (e.getSource() == btnInstall) {
+                new installProgress().execute();
+                btnInstall.setEnabled(false);
+            } else if (e.getSource() == btnCreate) {
                 if (txtServerIp.getText().isEmpty()) {
                     txtServerIp.requestFocusInWindow();
                     throw new Exception("Enter Server Ip");
@@ -519,7 +545,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private boolean checkServerCredentials(ServerCredentials serverCredentials) {
         DbInstallConstant.setServerCredentials(serverCredentials);
         try {
-            ConnectionConfig connectionConfig = new ConnectionConfig();
+            ConnectionConfig connectionConfig = DbInstallConstant.getContext().getBean(ConnectionConfig.class);
             connectionConfig.checkDataSource();
             return true;
         } catch (Exception e) {
@@ -679,6 +705,29 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         if (e.getSource() == btnInstall) {
             btnInstall.setForeground(Color.WHITE);
             btnInstall.setBorderPainted(false);
+        }
+    }
+
+    public static JLabel getLblTimer() {
+        return lblTimer;
+    }
+
+    public static JLabel getLblProgressPer() {
+        return lblProgressPer;
+    }
+
+    private class installProgress extends SwingWorker<String, String> {
+
+        @Override
+        protected String doInBackground() throws Exception {
+
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerCount(), 10, 1000);
+            installService.installTables();
+            timer.cancel();
+
+            JOptionPane.showMessageDialog(getContentPane(), "Completed Sucessfully...");
+            return "";
         }
     }
 

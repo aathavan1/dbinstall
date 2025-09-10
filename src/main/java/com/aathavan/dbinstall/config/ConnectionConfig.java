@@ -4,11 +4,13 @@ import com.aathavan.dbinstall.common.DbInstallCommon;
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.model.ServerCredentials;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import javax.swing.*;
 
+@Configuration
 public class ConnectionConfig {
     private DataSource getDataSource(String serverIp, String portNo, String userName, String password, String dbName) throws Exception {
         HikariDataSource hikariDataSource = null;
