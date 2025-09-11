@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class InstallLogic {
@@ -21,17 +22,25 @@ public class InstallLogic {
 
 
     public void installTables() throws Exception {
-        dbInstallService.installTable(getMasterTables(), DbInstallConstant.getServerCredentials().getCompanycode()+"amaster");
+        dbInstallService.installTable(getMasterTables(), DbInstallConstant.getServerCredentials().getCompanycode() + "amaster");
     }
 
 
     private List<MySqlTable> getMasterTables() {
         List<MySqlTable> lstMySqlTables = new LinkedList<>();
+        lstMySqlTables.add(masterTable.insertFileMainTable());
         lstMySqlTables.add(masterTable.insertOperatorTable());
         lstMySqlTables.add(masterTable.insertProductTable());
-
         return lstMySqlTables;
     }
+
+//    private List<Map<String, Object>> insertDefaultValues() {
+//
+//
+//
+//
+//
+//    }
 
 
 }

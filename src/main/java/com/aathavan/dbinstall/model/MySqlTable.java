@@ -37,15 +37,16 @@ public class MySqlTable {
 
     public String getTable() {
         StringBuilder sb = new StringBuilder();
-        sb.append("create table ").append(tablename).append(" (");
+        sb.append("CREATE TABLE ").append(tablename).append(" (");
         for (MySqlColumns mySqlColumns : lstColumns) {
             sb.append(mySqlColumns.getColumn()).append(" ,\n");
         }
-        if (constrains != null) {
+        if (constrains != null && !constrains.isEmpty()) {
             sb.append(constrains).append(")");
             return sb.toString();
         }
-        return sb.substring(0, sb.toString().length() - 1) + ")";
+        String tableCreationQuery = sb.toString().trim();
+        return tableCreationQuery.trim().substring(0, tableCreationQuery.length() - 1) + ")";
     }
 
 }

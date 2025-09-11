@@ -37,8 +37,12 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private JTabbedPane tabMain;
 
     public static JProgressBar getjProgressBar() {
-        lblProgressPer.setText(jProgressBar.getValue() + "%");
+
         return jProgressBar;
+    }
+
+    private static void setProgressPer() {
+        lblProgressPer.setText(jProgressBar.getValue() + "%");
     }
 
     private static JProgressBar jProgressBar;
@@ -290,7 +294,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         y = DbInstallCommon.verticalGap(panelDbInstall, scrPanel, vGap / 2);
 
         jProgressBar = new JProgressBar(0, 100);
-        jProgressBar.setBounds(scrPanel.getX(), y, scrPanel.getWidth() * 90 / 100, scrPanel.getHeight() * 10 / 100);
+        jProgressBar.setBounds(scrPanel.getX(), y, scrPanel.getWidth() * 90 / 100, scrPanel.getHeight() * 8 / 100);
         lblBackgroundImg.add(jProgressBar);
 
         x = DbInstallCommon.horizontalGap(panelDbInstall, jProgressBar, hGap);
@@ -302,7 +306,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
         y = DbInstallCommon.verticalGap(panelDbInstall, jProgressBar, vGap / 6);
 
-        lblProgressPer = new JLabel("sdsf");
+        lblProgressPer = new JLabel("");
         lblProgressPer.setBounds((int) (jProgressBar.getWidth() / 1.5), y, compWidth / 2, compHeight / 3);
         lblProgressPer.setFont(font);
         lblBackgroundImg.add(lblProgressPer);
@@ -711,6 +715,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(new TimerCount(), 10, 1000);
             installService.installTables();
+            getjProgressBar().setValue(100);
+            setProgressPer();
             timer.cancel();
 
             JOptionPane.showMessageDialog(getContentPane(), "Completed Sucessfully...");
