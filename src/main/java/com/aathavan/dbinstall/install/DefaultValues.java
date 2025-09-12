@@ -1,5 +1,6 @@
 package com.aathavan.dbinstall.install;
 
+import com.aathavan.dbinstall.model.DefaultValuesModel;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
@@ -10,12 +11,11 @@ import java.util.Map;
 public class DefaultValues {
 
 
-    public List<Map<String, Object>> insertOperatorValues() {
-        List<Map<String, Object>> lstOperatorValue = new LinkedList<>();
+    public DefaultValuesModel insertOperatorValues(String dbName) {
+        DefaultValuesModel defaultValuesModel = new DefaultValuesModel("operator", dbName);
+        defaultValuesModel.setColumnName(new LinkedList<>(List.of("aathavan","jil")));
 
 
-
-
-        return lstOperatorValue;
+        return defaultValuesModel;
     }
 }

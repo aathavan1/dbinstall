@@ -383,7 +383,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         compoundListener();
         fileRead();
         if (tabMain.getSelectedIndex() == 0) txtServerIp.requestFocusInWindow();
-
+        setVisible(false);
+        btnInstall.doClick();
 
     }
 

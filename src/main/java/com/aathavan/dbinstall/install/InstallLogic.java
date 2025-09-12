@@ -1,6 +1,7 @@
 package com.aathavan.dbinstall.install;
 
 import com.aathavan.dbinstall.common.DbInstallConstant;
+import com.aathavan.dbinstall.form.FormMain;
 import com.aathavan.dbinstall.model.MySqlTable;
 import com.aathavan.dbinstall.service.DbInstallService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class InstallLogic {
 
 
     public void installTables() throws Exception {
+        if (DbInstallConstant.getServerCredentials().getCompanycode() == null || DbInstallConstant.getServerCredentials().getCompanycode().isEmpty()) {
+            FormMain.setTextArea("Company Details Not Found...!");
+            return;
+        }
         dbInstallService.installTable(getMasterTables(), DbInstallConstant.getServerCredentials().getCompanycode() + "amaster");
     }
 
