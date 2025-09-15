@@ -1,15 +1,21 @@
 package com.aathavan.dbinstall.daoimpl;
 
 import com.aathavan.dbinstall.common.DbInstallConstant;
+import com.aathavan.dbinstall.config.ConnectionConfig;
 import com.aathavan.dbinstall.dao.DbInstallDao;
 import com.aathavan.dbinstall.form.FormMain;
+import com.aathavan.dbinstall.model.DefaultValuesModel;
 import com.aathavan.dbinstall.query.Querry;
 import com.aathavan.dbinstall.serviceimpl.DbInstallServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class DbInstallDaoImpl implements DbInstallDao {
@@ -35,6 +41,18 @@ public class DbInstallDaoImpl implements DbInstallDao {
         } catch (Exception e) {
             logger.error(e.getMessage());
             FormMain.setTextArea(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> checkDataForDefaultValues(DefaultValuesModel defaultValuesModel) {
+        try {
+            JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(new ConnectionConfig().getDbDataSource(defaultValuesModel.getDbname()));
+            return jdbcTemplateForDb.queryForList(querry.checkDataForDefaultValues(defaultValuesModel.getTablename()));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            FormMain.setTextArea(e.getMessage());
+            return null;
         }
     }
 }

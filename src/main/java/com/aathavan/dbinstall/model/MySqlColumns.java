@@ -36,6 +36,14 @@ public class MySqlColumns {
         this.UNIQUEKEY = UNIQUEKEY;
     }
 
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, int length, int scale, CommonEnum.NULLABLE NULLABLE) {
+        this.columnname = columnname;
+        this.dataType = dataType;
+        this.NULLABLE = NULLABLE;
+        this.length = length;
+        this.scale = scale;
+    }
+
     public String getColumnname() {
         return columnname;
     }

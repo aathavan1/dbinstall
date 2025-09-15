@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DbInstallService {
     void installTable(List<MySqlTable> masterTables, String aathav) ;
+
+    void defaultValues(List<Object> objects);
 }

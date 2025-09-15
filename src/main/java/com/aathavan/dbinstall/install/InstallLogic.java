@@ -7,6 +7,7 @@ import com.aathavan.dbinstall.service.DbInstallService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ public class InstallLogic {
 
     @Autowired
     private DbInstallService dbInstallService;
+    @Autowired
+    private DefaultValues defaultValues;
 
 
     public void installTables() throws Exception {
@@ -27,7 +30,10 @@ public class InstallLogic {
             FormMain.setTextArea("Company Details Not Found...!");
             return;
         }
-        dbInstallService.installTable(getMasterTables(), DbInstallConstant.getServerCredentials().getCompanycode() + "amaster");
+        String masterDBName = DbInstallConstant.getServerCredentials().getCompanycode() + "amaster";
+        dbInstallService.installTable(getMasterTables(), masterDBName);
+
+        dbInstallService.defaultValues(insertDefaultValues(masterDBName));
     }
 
 
@@ -39,13 +45,12 @@ public class InstallLogic {
         return lstMySqlTables;
     }
 
-//    private List<Map<String, Object>> insertDefaultValues() {
-//
-//
-//
-//
-//
-//    }
+    private List<Object> insertDefaultValues(String dbName) throws Exception {
+        List<Object> lstTableData = new ArrayList<>();
+        lstTableData.add(defaultValues.insertOperatorValues(dbName));
+
+        return lstTableData;
+    }
 
 
 }
