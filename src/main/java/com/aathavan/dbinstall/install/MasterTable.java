@@ -45,4 +45,16 @@ public class MasterTable {
         return mySqlTable;
     }
 
+    public MySqlTable insertCategoryTable() {
+        MySqlTable mySqlTable = new MySqlTable();
+        mySqlTable.setTableName("category", false);
+        mySqlTable.addColumns(new MySqlColumns("catcode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("catname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("mrprate", CommonEnum.DATATYPE.DECIMAL, 15,3, CommonEnum.NULLABLE.NO));
+        mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+
+        return mySqlTable;
+    }
+
 }

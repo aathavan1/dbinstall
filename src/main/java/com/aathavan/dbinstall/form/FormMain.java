@@ -18,7 +18,6 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.CodeSource;
@@ -29,32 +28,15 @@ import java.util.Timer;
 @Component
 public class FormMain extends JFrame implements WindowListener, KeyListener, ActionListener, FocusListener, MouseListener {
 
-    private JTextField txtServerIp, txtCompanyName, txtCompanyCode, txtPortNo, txtUsername;
-
-    private JPasswordField txtPassword;
-    private static JTextArea txtArea;
-
-    private JButton btnCreate, btnClear, btnInstall, btnExit1, btnExit2;
-
-    private JTabbedPane tabMain;
-
-    public static JProgressBar getjProgressBar() {
-
-        return jProgressBar;
-    }
-
-    private static void setProgressPer() {
-        lblProgressPer.setText(jProgressBar.getValue() + "%");
-    }
-
-    private static JProgressBar jProgressBar;
-
-    private static JLabel lblProgressPer;
-
-
-    private static JLabel lblTimer;
-
     private final Logger logger = Logger.getLogger(FormMain.class);
+    private static JTextArea txtArea;
+    private static JProgressBar jProgressBar;
+    private static JLabel lblProgressPer;
+    private static JLabel lblTimer;
+    private JTextField txtServerIp, txtCompanyName, txtCompanyCode, txtPortNo, txtUsername;
+    private JPasswordField txtPassword;
+    private JButton btnCreate, btnClear, btnInstall, btnExit1, btnExit2;
+    private JTabbedPane tabMain;
     private ImageIcon backgroundImageIcon = null;
 
     @Autowired
@@ -86,9 +68,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
 
     private void componentCreation() {
-
         JPanel panelDbInstall;
-
 
         tabMain = new JTabbedPane();
         tabMain.setBounds(-2, -25, getWidth() + 5, getHeight() + 28);
@@ -102,9 +82,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
         tabMain.add(panelDbInstall);
 
-
         repaint();
-
     }
 
 
@@ -121,7 +99,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         double hGap = 1.1, vGap = 7.1;
         int x, y;
 
-
         panelCompanyCreation = new JPanel(null);
         panelCompanyCreation.setBounds(0, 0, getWidth(), getHeight());
         panelCompanyCreation.setBorder(BorderFactory.createLineBorder(Color.blue));
@@ -132,13 +109,11 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         lblCompanyCreationImg.setIcon(backgroundImageIcon);
         panelCompanyCreation.add(lblCompanyCreationImg);
 
-
         lblHeading = new JLabel("COMPANY CREATION");
         lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
         lblHeading.setFont(new Font("Roboto", Font.BOLD, 40));
         lblHeading.setForeground(Color.decode("#964B00"));
         lblCompanyCreationImg.add(lblHeading);
-
 
         lblServerIp = new JLabel("Server Ip");
         lblServerIp.setBounds(getWidth() * 20 / 100, getHeight() * 20 / 100, compWidth, compHeight);
@@ -167,7 +142,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         txtUsername.setBounds(x, y, txtCompWidth, compHeight);
         txtUsername.setToolTipText("Enter The UserName..");
         lblCompanyCreationImg.add(txtUsername);
-
 
         x = lblServerIp.getX();
         y = DbInstallCommon.verticalGap(panelCompanyCreation, lblUserName, vGap);
@@ -199,7 +173,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         txtPortNo.setToolTipText("Enter The PortNo");
         lblCompanyCreationImg.add(txtPortNo);
 
-
         x = lblServerIp.getX();
         y = DbInstallCommon.verticalGap(panelCompanyCreation, lblPortNo, vGap);
 
@@ -214,7 +187,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         txtCompanyName.setBounds(x, y, txtCompWidth, compHeight);
         txtCompanyName.setToolTipText("User CompanyName..");
         lblCompanyCreationImg.add(txtCompanyName);
-
 
         x = lblServerIp.getX();
         y = DbInstallCommon.verticalGap(panelCompanyCreation, LblCompanyName, vGap);
@@ -231,14 +203,11 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         txtCompanyCode.setEnabled(false);
         lblCompanyCreationImg.add(txtCompanyCode);
 
-
         x = lblServerIp.getX() + (lblServerIp.getWidth() / 4);
         y = DbInstallCommon.verticalGap(panelCompanyCreation, txtCompanyCode, vGap / 2);
 
-
         btnClear = btnCreation("Clear", x, y, (int) (compWidth / 1.6), (int) (compHeight * 1.2), false, font);
         lblCompanyCreationImg.add(btnClear);
-
 
         x = DbInstallCommon.horizontalGap(panelCompanyCreation, btnClear, 5);
 
@@ -249,7 +218,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
         btnExit1 = btnCreation("Exit", x, y, btnClear.getWidth(), btnClear.getHeight(), false, font);
         lblCompanyCreationImg.add(btnExit1);
-
     }
 
     private void panelDbInstallCreation() {
@@ -265,7 +233,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         double hGap = 1.1, vGap = 7.1;
         int x, y;
 
-
         panelDbInstall = new JPanel(null);
         panelDbInstall.setBounds(0, 0, getWidth(), getHeight());
         panelDbInstall.setBorder(BorderFactory.createLineBorder(Color.blue));
@@ -275,7 +242,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         lblBackgroundImg.setBounds(0, 0, panelDbInstall.getWidth(), panelDbInstall.getHeight());
         lblBackgroundImg.setIcon(backgroundImageIcon);
         panelDbInstall.add(lblBackgroundImg);
-
 
         lblHeading = new JLabel("DATABASE INSTALL");
         lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
@@ -313,19 +279,15 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         lblProgressPer.setFont(font);
         lblBackgroundImg.add(lblProgressPer);
 
-
         y = DbInstallCommon.verticalGap(panelDbInstall, lblProgressPer, vGap / 2);
-
 
         btnInstall = btnCreation("Install", getWidth() * 40 / 100, y, (int) (compWidth / 1.6), (int) (compHeight * 1.2), false, font);
         lblBackgroundImg.add(btnInstall);
-
 
         x = DbInstallCommon.horizontalGap(panelDbInstall, btnInstall, hGap * 2);
 
         btnExit2 = btnCreation("Exit", x, y, btnInstall.getWidth(), btnInstall.getHeight(), false, font);
         lblBackgroundImg.add(btnExit2);
-
     }
 
 
@@ -387,8 +349,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         compoundListener();
         fileRead();
         if (tabMain.getSelectedIndex() == 0) txtServerIp.requestFocusInWindow();
-        setVisible(false);
-        btnInstall.doClick();
+//        setVisible(false);
+//        btnInstall.doClick();
 
     }
 
@@ -534,6 +496,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 serverCredentials.setPassword(String.valueOf(txtPassword.getPassword()).trim());
                 serverCredentials.setPortno(txtPortNo.getText().trim());
                 serverCredentials.setServerip(txtServerIp.getText().trim());
+                serverCredentials.setCompanycode(txtCompanyCode.getText().trim());
+                serverCredentials.setCompanyname(txtCompanyName.getText().trim());
 
                 if (!checkServerCredentials(serverCredentials)) {
                     txtServerIp.requestFocusInWindow();
@@ -544,6 +508,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 clear();
                 JOptionPane.showMessageDialog(getContentPane(), "CompanyCreated Sucessfully...");
                 tabMain.setSelectedIndex(1);
+                btnInstall.requestFocusInWindow();
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(getContentPane(), ex.getMessage());
@@ -732,5 +697,14 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
             return "";
         }
     }
+
+    public static JProgressBar getjProgressBar() {
+        return jProgressBar;
+    }
+
+    private static void setProgressPer() {
+        lblProgressPer.setText(jProgressBar.getValue() + "%");
+    }
+
 
 }
