@@ -1,7 +1,9 @@
-package com.aathavan.dbinstall.install;
+package com.aathavan.dbinstall.logic;
 
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.form.FormMain;
+import com.aathavan.dbinstall.install.DefaultValues;
+import com.aathavan.dbinstall.install.MasterTable;
 import com.aathavan.dbinstall.model.MySqlTable;
 import com.aathavan.dbinstall.service.DbInstallService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class InstallLogic {
@@ -48,6 +49,8 @@ public class InstallLogic {
     private List<Object> insertDefaultValues(String dbName) throws Exception {
         List<Object> lstTableData = new ArrayList<>();
         lstTableData.add(defaultValues.insertOperatorValues(dbName));
+        lstTableData.add(defaultValues.insertFileMainValues(dbName));
+
 
         return lstTableData;
     }

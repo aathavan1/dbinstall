@@ -2,7 +2,7 @@ package com.aathavan.dbinstall.form;
 
 import com.aathavan.dbinstall.common.*;
 import com.aathavan.dbinstall.config.ConnectionConfig;
-import com.aathavan.dbinstall.install.InstallLogic;
+import com.aathavan.dbinstall.logic.InstallLogic;
 import com.aathavan.dbinstall.model.ServerCredentials;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,10 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
@@ -341,7 +343,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private void fileRead() {
         try {
-            File file = new File("CompanyDetail.txt");
+            CodeSource codeSource = FormMain.class.getProtectionDomain().getCodeSource();
+            File filePath = new File(codeSource.getLocation().getFile());
+            File file = new File(filePath.getParent() + "/" + "CompanyDetail.txt");
             if (!file.exists()) {
                 JOptionPane.showMessageDialog(getContentPane(), "Company Details Not Found... Create a New Company");
                 tabMain.setSelectedIndex(0);
@@ -569,7 +573,11 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     }
 
     private void setTxtFileTiValues() throws Exception {
-        File file = new File("CompanyDetail.txt");
+        CodeSource codeSource = FormMain.class.getProtectionDomain().getCodeSource();
+        File filePath = new File(codeSource.getLocation().getFile());
+
+
+        File file = new File(filePath.getParent() + "/" + "CompanyDetail.txt");
         FileWriter fileWriter = new FileWriter(file);
         fileWriter.write(txtServerIp.getText().trim() + "\n");
         fileWriter.write(Secutity.encrypter(txtPortNo.getText()) + "\n");

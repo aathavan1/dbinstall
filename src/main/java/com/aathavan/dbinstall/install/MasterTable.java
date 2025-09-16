@@ -11,10 +11,10 @@ public class MasterTable {
     public MySqlTable insertFileMainTable() {
         MySqlTable mySqlTable = new MySqlTable();
         mySqlTable.setTableName("filemain", false);
-        mySqlTable.addColumns(new MySqlColumns("companycode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("companycode", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.YES));
         mySqlTable.addColumns(new MySqlColumns("masterdbname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("trandbname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
-        mySqlTable.addColumns(new MySqlColumns("financialyear", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("financialyear", CommonEnum.DATATYPE.VARCHAR, 5, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
 
         return mySqlTable;
     }
