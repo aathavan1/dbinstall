@@ -19,7 +19,7 @@ public class DefaultValues {
     private CommonLogic commonLogic;
 
     public DefaultValuesModel insertOperatorValues(String dbName) throws Exception {
-        DefaultValuesModel defaultValuesModel = new DefaultValuesModel("operator", dbName);
+        DefaultValuesModel defaultValuesModel = new DefaultValuesModel("operator", dbName, true);
         defaultValuesModel.setPrimaryColName("opercode");
         defaultValuesModel.setColumnName(new LinkedList<>(List.of("opercode", "opername", "password", "active", "createddate")));
         defaultValuesModel.setColumnValues(new LinkedList<>(List.of("1", "Administrator", Secutity.encrypter("123"), "Y", dateValue)));
@@ -32,7 +32,7 @@ public class DefaultValues {
         DefaultValuesModel defaultValuesModel = new DefaultValuesModel("filemain", dbName);
         defaultValuesModel.setPrimaryColName("companycode");
         defaultValuesModel.setColumnName(new LinkedList<>(List.of("companycode", "masterdbname", "trandbname", "financialyear")));
-        defaultValuesModel.setColumnValues(new LinkedList<>(List.of(companyCode, companyCode + "amaster", companyCode + "s" +finYear, finYear)));
+        defaultValuesModel.setColumnValues(new LinkedList<>(List.of(companyCode, companyCode + "amaster", companyCode + "s" + finYear, finYear)));
         return defaultValuesModel;
     }
 }

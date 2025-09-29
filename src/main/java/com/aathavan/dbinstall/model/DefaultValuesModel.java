@@ -19,6 +19,8 @@ public class DefaultValuesModel {
     private String tablename;
     @Getter
     private String dbname;
+    @Getter
+    private boolean update = false;
     @Setter
     @Getter
     private String primaryColName;
@@ -27,6 +29,12 @@ public class DefaultValuesModel {
 
     public DefaultValuesModel(String tablename, String dbname) {
         this.tablename = tablename;
+        this.dbname = dbname;
+    }
+
+    public DefaultValuesModel(String tablename, String dbname, boolean update) {
+        this.tablename = tablename;
+        this.update = update;
         this.dbname = dbname;
     }
 

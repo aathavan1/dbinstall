@@ -11,7 +11,7 @@ public interface DbInstallDao {
 
     boolean checkExist(String query, JdbcTemplate jdbcTemplate) throws Exception;
 
-    void executeQuery(String query, JdbcTemplate jdbcTemplate) throws Exception;
+    void executeQuery(String query, JdbcTemplate jdbcTemplate);
 
     public List<Map<String, Object>> checkDataForDefaultValues(DefaultValuesModel defaultValuesModel);
 }

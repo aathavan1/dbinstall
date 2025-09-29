@@ -47,7 +47,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         ClassLoader classLoader = this.getClass().getClassLoader();
 
         backgroundImageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource(CommonEnum.Image.BACKGROUND.getValue())));
-        setSize(backgroundImageIcon.getIconWidth(), backgroundImageIcon.getIconHeight());
+        setSize(750, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
@@ -106,12 +106,13 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
         lblCompanyCreationImg = new JLabel();
         lblCompanyCreationImg.setBounds(0, 0, panelCompanyCreation.getWidth(), panelCompanyCreation.getHeight());
-        lblCompanyCreationImg.setIcon(backgroundImageIcon);
+        Image image = backgroundImageIcon.getImage().getScaledInstance(getContentPane().getWidth(), getContentPane().getHeight(), Image.SCALE_SMOOTH);
+        lblCompanyCreationImg.setIcon(new ImageIcon(image));
         panelCompanyCreation.add(lblCompanyCreationImg);
 
         lblHeading = new JLabel("COMPANY CREATION");
-        lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
-        lblHeading.setFont(new Font("Roboto", Font.BOLD, 40));
+        lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, (int) (compHeight * 1.2));
+        lblHeading.setFont(new Font("Roboto", Font.BOLD, 35));
         lblHeading.setForeground(Color.decode("#964B00"));
         lblCompanyCreationImg.add(lblHeading);
 
@@ -240,12 +241,13 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
         lblBackgroundImg = new JLabel();
         lblBackgroundImg.setBounds(0, 0, panelDbInstall.getWidth(), panelDbInstall.getHeight());
-        lblBackgroundImg.setIcon(backgroundImageIcon);
+        Image image = backgroundImageIcon.getImage().getScaledInstance(getContentPane().getWidth(), getContentPane().getHeight(), Image.SCALE_SMOOTH);
+        lblBackgroundImg.setIcon(new ImageIcon(image));
         panelDbInstall.add(lblBackgroundImg);
 
         lblHeading = new JLabel("DATABASE INSTALL");
-        lblHeading.setBounds(getWidth() * 20 / 100, getHeight() * 5 / 100, compWidth * 5, compHeight);
-        lblHeading.setFont(new Font("Roboto", Font.BOLD, 40));
+        lblHeading.setBounds(getWidth() * 10 / 100, getHeight() * 5 / 100, compWidth * 5, (int) (compHeight * 1.2));
+        lblHeading.setFont(new Font("Roboto", Font.BOLD, 35));
         lblHeading.setForeground(Color.decode("#964B00"));
         lblBackgroundImg.add(lblHeading);
 
@@ -349,8 +351,8 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         compoundListener();
         fileRead();
         if (tabMain.getSelectedIndex() == 0) txtServerIp.requestFocusInWindow();
-//        setVisible(false);
-//        btnInstall.doClick();
+        setVisible(false);
+        btnInstall.doClick();
 
     }
 

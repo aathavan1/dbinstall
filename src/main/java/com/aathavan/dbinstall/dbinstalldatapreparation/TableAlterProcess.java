@@ -23,18 +23,21 @@ public class TableAlterProcess {
     @Autowired
     private DbInstallDao dbInstallDao;
 
-    public void mySqlAlterColumnProcess(MySqlTable mySqlTable, String dbName, JdbcTemplate jdbcTemplate) throws Exception {
-        for (MySqlColumns mySqlColumns : mySqlTable.getLstColumns()) {
-            if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName)) {
-                String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ADD COLUMN " + mySqlColumns.getColumn();
-                dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
+    public void mySqlAlterColumnProcess(MySqlTable mySqlTable, String dbName, JdbcTemplate jdbcTemplate) {
+        try {
+            for (MySqlColumns mySqlColumns : mySqlTable.getLstColumns()) {
+                if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName)) {
+                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ADD COLUMN " + mySqlColumns.getColumn();
+                    dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
+                } else if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName)) {
+                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ALTER COLUMN " + mySqlColumns.getColumn();
+                    dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
+                }
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            FormMain.setTextArea(e.getMessage());
         }
-//        else{
-//            if(checkAlterColumn()){
-//
-//            }
-//        }
     }
 
     private boolean checkColumnExist(String tableName, String columnName, JdbcTemplate jdbcTemplate, String dbName) throws Exception {
@@ -89,7 +92,7 @@ public class TableAlterProcess {
             if (!lstTableValuesForInsert.isEmpty()) {
                 jdbcTemplate.batchUpdate(defaultValuesModel.getInsertQuery(), lstTableValuesForInsert.toArray(new Map[0]));
             }
-            if (!lstTableValuesForUpdate.isEmpty()) {
+            if (!lstTableValuesForUpdate.isEmpty() && defaultValuesModel.isUpdate()) {
                 jdbcTemplate.batchUpdate(defaultValuesModel.getUpdateQuery(), lstTableValuesForUpdate.toArray(new Map[0]));
             }
         } catch (Exception e) {

@@ -35,7 +35,7 @@ public class DbInstallDaoImpl implements DbInstallDao {
     }
 
     @Override
-    public void executeQuery(String query, JdbcTemplate jdbcTemplate) throws Exception {
+    public void executeQuery(String query, JdbcTemplate jdbcTemplate) {
         try {
             jdbcTemplate.execute(query);
         } catch (Exception e) {
