@@ -68,7 +68,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         }
     }
 
-
     private void componentCreation() {
         JPanel panelDbInstall;
 
