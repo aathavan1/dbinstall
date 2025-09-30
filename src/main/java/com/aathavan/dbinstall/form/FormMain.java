@@ -4,6 +4,7 @@ import com.aathavan.dbinstall.common.*;
 import com.aathavan.dbinstall.config.ConnectionConfig;
 import com.aathavan.dbinstall.logic.InstallLogic;
 import com.aathavan.dbinstall.model.ServerCredentials;
+import lombok.Getter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,12 +33,13 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private static JTextArea txtArea;
     private static JProgressBar jProgressBar;
     private static JLabel lblProgressPer;
+    @Getter
     private static JLabel lblTimer;
     private JTextField txtServerIp, txtCompanyName, txtCompanyCode, txtPortNo, txtUsername;
     private JPasswordField txtPassword;
     private JButton btnCreate, btnClear, btnInstall, btnExit1, btnExit2;
     private JTabbedPane tabMain;
-    private ImageIcon backgroundImageIcon = null;
+    private ImageIcon backgroundImageIcon;
 
     @Autowired
     private InstallLogic installService;
@@ -89,7 +91,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private void panelCompanyCreation() {
         JPanel panelCompanyCreation;
 
-        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode, lblCompanyCreationImg, lblDbInstallImg, lblExit, lblHeading;
+        JLabel lblServerIp, lblUserName, lblPassword, lblPortNo, LblCompanyName, lblCompanyCode, lblCompanyCreationImg, lblHeading;
 
         Font font = new Font("Times New Roman", Font.PLAIN, 15);
 
@@ -230,7 +232,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
         int compWidth = getWidth() * 20 / 100;
         int compHeight = getHeight() * 4 / 100;
-        int txtCompWidth = (int) (compWidth * 1.2);
         double hGap = 1.1, vGap = 7.1;
         int x, y;
 
@@ -295,7 +296,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private JButton btnCreation(String name, int x, int y, int width, int height, boolean isRequireVerifire, Font font) {
         JButton jButton = new JButton(name);
-        jButton.setBounds(x, y, width, (int) height);
+        jButton.setBounds(x, y, width, height);
         jButton.setForeground(Color.white);
         jButton.setFont(font);
         jButton.setBackground(Color.decode("#4b7abd"));
@@ -352,7 +353,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         fileRead();
         if (tabMain.getSelectedIndex() == 0) txtServerIp.requestFocusInWindow();
 //        setVisible(false);
-        btnInstall.doClick();
+//        btnInstall.doClick();
 
     }
 
@@ -416,16 +417,16 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         });
     }
 
-    private void addListeners(JComponent txtField, boolean focusListener) {
+    private void addListeners(JComponent jComponent, boolean focusListener) {
 
-        if (txtField instanceof JTextField) {
-            ((JTextField) txtField).addKeyListener(this);
-            if (focusListener) ((JTextField) txtField).addFocusListener(this);
+        if (jComponent instanceof JTextField) {
+            jComponent.addKeyListener(this);
+            if (focusListener) jComponent.addFocusListener(this);
         } else {
-            ((JButton) txtField).addActionListener(this);
+            ((JButton) jComponent).addActionListener(this);
             if (focusListener) {
-                ((JButton) txtField).addMouseListener(this);
-                ((JButton) txtField).addFocusListener(this);
+                jComponent.addMouseListener(this);
+                jComponent.addFocusListener(this);
 
             }
         }
@@ -530,14 +531,6 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         }
     }
 
-    private void clear() {
-        txtCompanyName.setText("");
-        txtCompanyCode.setText("");
-        txtServerIp.setText("");
-        txtPortNo.setText("");
-        txtUsername.setText("");
-        txtPassword.setText("");
-    }
 
     private void setTxtFileTiValues() throws Exception {
         CodeSource codeSource = FormMain.class.getProtectionDomain().getCodeSource();
@@ -558,64 +551,51 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-
-    @Override
     public void keyPressed(KeyEvent e) {
         try {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_ENTER -> {
-                    if (e.getComponent() == txtServerIp) {
-                        txtUsername.requestFocusInWindow();
-                    } else if (e.getComponent() == txtUsername) txtPassword.requestFocusInWindow();
-                    else if (e.getComponent() == txtPassword) txtPortNo.requestFocusInWindow();
-                    else if (e.getComponent() == txtPortNo) txtCompanyName.requestFocusInWindow();
-                    else if (e.getComponent() == txtCompanyName) {
-                        btnCreate.setEnabled(true);
-                        btnCreate.requestFocusInWindow();
-                    } else if (e.getComponent() == btnCreate) {
-                        btnCreate.doClick();
-                    } else if (e.getComponent() == btnClear) btnClear.doClick();
-                }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (e.getComponent() == txtServerIp) {
+                    txtUsername.requestFocusInWindow();
+                } else if (e.getComponent() == txtUsername) txtPassword.requestFocusInWindow();
+                else if (e.getComponent() == txtPassword) txtPortNo.requestFocusInWindow();
+                else if (e.getComponent() == txtPortNo) txtCompanyName.requestFocusInWindow();
+                else if (e.getComponent() == txtCompanyName) {
+                    btnCreate.setEnabled(true);
+                    btnCreate.requestFocusInWindow();
+                } else if (e.getComponent() == btnCreate) {
+                    btnCreate.doClick();
+                } else if (e.getComponent() == btnClear) btnClear.doClick();
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
+    private class installProgress extends SwingWorker<String, String> {
 
-    }
+        @Override
+        protected String doInBackground() throws Exception {
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerCount(), 10, 1000);
+            installService.installTables();
+            getjProgressBar().setValue(100);
+            setProgressPer();
+            timer.cancel();
 
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    private void setMouseEntered(JButton jButton, boolean isEntered) {
-        if (isEntered) {
-            jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            jButton.setForeground(Color.BLACK);
-            jButton.setBorderPainted(true);
-        } else {
-            jButton.setForeground(Color.WHITE);
-            jButton.setBorderPainted(false);
+            JOptionPane.showMessageDialog(getContentPane(), "Completed Sucessfully...");
+            return "";
         }
+    }
 
+
+    private void clear() {
+        txtCompanyName.setText("");
+        txtCompanyCode.setText("");
+        txtServerIp.setText("");
+        txtPortNo.setText("");
+        txtUsername.setText("");
+        txtPassword.setText("");
     }
 
     @Override
@@ -637,7 +617,17 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         else if (e.getSource() == btnInstall) setMouseEntered(btnInstall, false);
         else if (e.getSource() == btnExit1) setMouseEntered(btnExit1, false);
         else if (e.getSource() == btnExit2) setMouseEntered(btnExit2, false);
+    }
 
+    private void setMouseEntered(JButton jButton, boolean isEntered) {
+        if (isEntered) {
+            jButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            jButton.setForeground(Color.BLACK);
+            jButton.setBorderPainted(true);
+        } else {
+            jButton.setForeground(Color.WHITE);
+            jButton.setBorderPainted(false);
+        }
     }
 
     @Override
@@ -674,30 +664,9 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         }
     }
 
+
     public static void setTextArea(String txtMessage) {
         txtArea.setText(txtArea.getText() + "\n" + txtMessage);
-    }
-
-    public static JLabel getLblTimer() {
-        return lblTimer;
-    }
-
-
-    private class installProgress extends SwingWorker<String, String> {
-
-        @Override
-        protected String doInBackground() throws Exception {
-
-            Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new TimerCount(), 10, 1000);
-            installService.installTables();
-            getjProgressBar().setValue(100);
-            setProgressPer();
-            timer.cancel();
-
-            JOptionPane.showMessageDialog(getContentPane(), "Completed Sucessfully...");
-            return "";
-        }
     }
 
     public static JProgressBar getjProgressBar() {
@@ -706,6 +675,31 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
 
     private static void setProgressPer() {
         lblProgressPer.setText(jProgressBar.getValue() + "%");
+    }
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
     }
 
 
