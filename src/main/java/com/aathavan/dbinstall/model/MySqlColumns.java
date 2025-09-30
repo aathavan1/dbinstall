@@ -78,6 +78,8 @@ public class MySqlColumns {
             }
             case DATETIME -> {
                 return "DATETIME";
+            }case LONGBLOB -> {
+                return "LONGBLOB";
             }
         }
         return "";

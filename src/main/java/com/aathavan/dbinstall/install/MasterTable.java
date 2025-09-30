@@ -34,6 +34,7 @@ public class MasterTable {
         mySqlTable.addColumns(new MySqlColumns("productcode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("productname", CommonEnum.DATATYPE.VARCHAR, 29, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("categorycode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("image", CommonEnum.DATATYPE.LONGBLOB, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("description", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("mrprate", CommonEnum.DATATYPE.DECIMAL, 16, 2, CommonEnum.NULLABLE.NO));
         mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));

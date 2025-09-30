@@ -83,6 +83,7 @@ public class TableAlterProcess {
         if (String.valueOf(columnData.get("data_type")).equalsIgnoreCase(mySqlColumns.getDataTypes())) {
             if (mySqlColumns.getDataTypes().equalsIgnoreCase("INT") ||
                     mySqlColumns.getDataTypes().equalsIgnoreCase("DATE") ||
+                    mySqlColumns.getDataTypes().equalsIgnoreCase("LONGBLOB") ||
                     mySqlColumns.getDataTypes().equalsIgnoreCase("DATETIME")) {
                 return true;
             } else if (mySqlColumns.getDataTypes().equalsIgnoreCase("VARCHAR")) {

@@ -19,7 +19,7 @@ public class CommonEnum {
     }
 
     public enum DATATYPE {
-        VARCHAR, INT, DATE, DATETIME, DECIMAL
+        VARCHAR, INT, DATE, DATETIME, DECIMAL,LONGBLOB
     }
 
     public enum NULLABLE {
