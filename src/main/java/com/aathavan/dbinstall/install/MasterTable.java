@@ -30,7 +30,7 @@ public class MasterTable {
     }
 
     public MySqlTable insertProductTable() {
-        MySqlTable mySqlTable = new MySqlTable("product");
+        MySqlTable mySqlTable = new MySqlTable("product",true);
         mySqlTable.addColumns(new MySqlColumns("productcode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("productname", CommonEnum.DATATYPE.VARCHAR, 29, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("categorycode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));

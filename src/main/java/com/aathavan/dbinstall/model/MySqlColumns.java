@@ -62,6 +62,15 @@ public class MySqlColumns {
         return sb.toString();
     }
 
+    public String getColumnForSp() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(columnname).append(" ").append(getDataTypes());
+        if (length > 0)
+            sb.append("(").append(length).append(scale > 0 ? " ," + scale + " )" : " )");
+
+        return sb.toString();
+    }
+
     public String getDataTypes() {
         switch (columnDataType) {
             case INT -> {
@@ -78,7 +87,8 @@ public class MySqlColumns {
             }
             case DATETIME -> {
                 return "DATETIME";
-            }case LONGBLOB -> {
+            }
+            case LONGBLOB -> {
                 return "LONGBLOB";
             }
         }

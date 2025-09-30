@@ -33,7 +33,6 @@ public class InstallLogic {
         }
         String masterDBName = DbInstallConstant.getServerCredentials().getCompanycode() + "amaster";
         dbInstallService.installTable(getMasterTables(), masterDBName);
-
         dbInstallService.defaultValues(insertDefaultValues(masterDBName));
     }
 
@@ -48,12 +47,10 @@ public class InstallLogic {
         return lstMySqlTables;
     }
 
-    private List<Object> insertDefaultValues(String dbName) throws Exception {
+    private List<Object> insertDefaultValues(String dbName) {
         List<Object> lstTableData = new ArrayList<>();
         lstTableData.add(defaultValues.insertOperatorValues(dbName));
         lstTableData.add(defaultValues.insertFileMainValues(dbName));
-
-
         return lstTableData;
     }
 

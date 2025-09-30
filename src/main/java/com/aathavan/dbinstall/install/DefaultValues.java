@@ -18,7 +18,7 @@ public class DefaultValues {
     @Autowired
     private CommonLogic commonLogic;
 
-    public DefaultValuesModel insertOperatorValues(String dbName) throws Exception {
+    public DefaultValuesModel insertOperatorValues(String dbName) {
         DefaultValuesModel defaultValuesModel = new DefaultValuesModel("operator", dbName, true);
         defaultValuesModel.setPrimaryColName("opercode");
         defaultValuesModel.setColumnName(new LinkedList<>(List.of("opercode", "opername", "password", "active", "createddate")));
@@ -26,7 +26,7 @@ public class DefaultValues {
         return defaultValuesModel;
     }
 
-    public DefaultValuesModel insertFileMainValues(String dbName) throws Exception {
+    public DefaultValuesModel insertFileMainValues(String dbName) {
         String finYear = String.valueOf(commonLogic.getFinYearByDate());
         String companyCode = DbInstallConstant.getServerCredentials().getCompanycode();
         DefaultValuesModel defaultValuesModel = new DefaultValuesModel("filemain", dbName);
