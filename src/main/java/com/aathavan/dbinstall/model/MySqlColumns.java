@@ -1,53 +1,51 @@
 package com.aathavan.dbinstall.model;
 
 import com.aathavan.dbinstall.common.CommonEnum;
+import lombok.Getter;
 
 public class MySqlColumns {
-
+    @Getter
     private int length;
+    @Getter
     private int scale;
 
+    @Getter
     private String columnname;
-    private CommonEnum.DATATYPE dataType;
+    private CommonEnum.DATATYPE columnDataType;
     private CommonEnum.NULLABLE NULLABLE = CommonEnum.NULLABLE.YES;
     private CommonEnum.UNIQUEKEY UNIQUEKEY = CommonEnum.UNIQUEKEY.NO;
     private CommonEnum.PRIMARYKEY PRIMARYKEY = CommonEnum.PRIMARYKEY.NO;
 
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
         this.columnname = columnname;
-        this.dataType = dataType;
+        this.columnDataType = columnDataType;
         this.NULLABLE = NULLABLE;
         this.UNIQUEKEY = UNIQUEKEY;
     }
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.PRIMARYKEY unique) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.PRIMARYKEY unique) {
         this.columnname = columnname;
-        this.dataType = dataType;
+        this.columnDataType = columnDataType;
         this.NULLABLE = NULLABLE;
         this.PRIMARYKEY = unique;
     }
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, int length, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, int length, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
         this.columnname = columnname;
-        this.dataType = dataType;
+        this.columnDataType = columnDataType;
         this.NULLABLE = NULLABLE;
         this.length = length;
         this.UNIQUEKEY = UNIQUEKEY;
     }
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE dataType, int length, int scale, CommonEnum.NULLABLE NULLABLE) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, int length, int scale, CommonEnum.NULLABLE NULLABLE) {
         this.columnname = columnname;
-        this.dataType = dataType;
+        this.columnDataType = columnDataType;
         this.NULLABLE = NULLABLE;
         this.length = length;
         this.scale = scale;
     }
-
-    public String getColumnname() {
-        return columnname;
-    }
-
 
     public String getColumn() {
         StringBuilder sb = new StringBuilder();
@@ -64,8 +62,8 @@ public class MySqlColumns {
         return sb.toString();
     }
 
-    private String getDataTypes() {
-        switch (dataType) {
+    public String getDataTypes() {
+        switch (columnDataType) {
             case INT -> {
                 return "INT";
             }

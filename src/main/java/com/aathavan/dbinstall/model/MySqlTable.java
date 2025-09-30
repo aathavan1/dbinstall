@@ -1,37 +1,35 @@
 package com.aathavan.dbinstall.model;
 
+import lombok.Getter;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class MySqlTable {
 
-
+    @Getter
     private String tablename;
     private String constrains = null;
     private boolean procedure = false;
-
-
+    @Getter
     private List<MySqlColumns> lstColumns = new LinkedList<>();
+
+    public MySqlTable(String tableName) {
+        this.tablename = tableName;
+    }
+
+    public MySqlTable(String tableName, boolean procedure) {
+        this.tablename = tableName;
+        this.procedure = procedure;
+    }
 
 
     public void addColumns(MySqlColumns mySqlColumns) {
         lstColumns.add(mySqlColumns);
     }
 
-    public void setTableName(String tableName, boolean procedure) {
-        this.tablename = tableName;
-    }
-
     public void addConstrains(String constrain) {
         this.constrains = constrain;
-    }
-
-    public String getTablename() {
-        return tablename;
-    }
-
-    public List<MySqlColumns> getLstColumns() {
-        return lstColumns;
     }
 
 

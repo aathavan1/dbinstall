@@ -3,6 +3,7 @@ package com.aathavan.dbinstall.dao;
 import com.aathavan.dbinstall.model.DefaultValuesModel;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
@@ -13,5 +14,7 @@ public interface DbInstallDao {
 
     void executeQuery(String query, JdbcTemplate jdbcTemplate);
 
-    public List<Map<String, Object>> checkDataForDefaultValues(DefaultValuesModel defaultValuesModel);
+    List<Map<String, Object>> checkDataForDefaultValues(DefaultValuesModel defaultValuesModel);
+
+    List<Map<String, Object>> getData(String query, JdbcTemplate jdbcTemplate);
 }

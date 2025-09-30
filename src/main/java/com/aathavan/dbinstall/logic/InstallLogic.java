@@ -43,6 +43,8 @@ public class InstallLogic {
         lstMySqlTables.add(masterTable.insertFileMainTable());
         lstMySqlTables.add(masterTable.insertOperatorTable());
         lstMySqlTables.add(masterTable.insertProductTable());
+        lstMySqlTables.add(masterTable.insertCategoryTable());
+
         return lstMySqlTables;
     }
 

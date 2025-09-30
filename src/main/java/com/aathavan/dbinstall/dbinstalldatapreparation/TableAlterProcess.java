@@ -6,7 +6,6 @@ import com.aathavan.dbinstall.form.FormMain;
 import com.aathavan.dbinstall.model.DefaultValuesModel;
 import com.aathavan.dbinstall.model.MySqlColumns;
 import com.aathavan.dbinstall.model.MySqlTable;
-import com.aathavan.dbinstall.serviceimpl.DbInstallServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,8 +28,8 @@ public class TableAlterProcess {
                 if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName)) {
                     String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ADD COLUMN " + mySqlColumns.getColumn();
                     dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
-                } else if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName)) {
-                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ALTER COLUMN " + mySqlColumns.getColumn();
+                } else if (!prepareStringForColumnDataTypes(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName, mySqlColumns)) {
+                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " MODIFY COLUMN " + mySqlColumns.getColumn();
                     dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
                 }
             }
@@ -59,17 +58,42 @@ public class TableAlterProcess {
         return sb.toString();
     }
 
-    public String prepareStringForColumnDataTypes() {
-        StringBuilder sb = new StringBuilder();
+    public boolean prepareStringForColumnDataTypes(String tableName, String columnName, JdbcTemplate jdbcTemplate, String dbName, MySqlColumns mySqlColumns) {
+        try {
+            StringBuilder sb = new StringBuilder();
 
-        sb.append("select data_type,character_maximum_length,numeric_precision,numeric_scale,datetime_precision \n");
-        sb.append(" from information_schema.columns\n");
-        sb.append(" where table_name = 'product'\n");
-        sb.append("and column_name = 'mrprate' \n");
-        sb.append("and table_schema = 'aatamaster' \n");
+            sb.append("select data_type,character_maximum_length,numeric_precision,numeric_scale,datetime_precision \n");
+            sb.append(" from information_schema.columns\n");
+            sb.append(" where table_name = '").append(tableName).append("'\n");
+            sb.append("and column_name = '").append(columnName).append("' \n");
+            sb.append("and table_schema = '").append(dbName).append("' \n");
+            List<Map<String, Object>> lstTableData = dbInstallDao.getData(sb.toString(), jdbcTemplate);
+            if (lstTableData.isEmpty())
+                throw new Exception("Problem Occur While getting the " + tableName + " table datatypes");
+            return checkColumnDataTypes(lstTableData.getFirst(), mySqlColumns);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            FormMain.setTextArea(e.getMessage());
+            return true;
+        }
 
+    }
 
-        return sb.toString();
+    private boolean checkColumnDataTypes(Map<String, Object> columnData, MySqlColumns mySqlColumns) {
+        if (String.valueOf(columnData.get("data_type")).equalsIgnoreCase(mySqlColumns.getDataTypes())) {
+            if (mySqlColumns.getDataTypes().equalsIgnoreCase("INT") ||
+                    mySqlColumns.getDataTypes().equalsIgnoreCase("DATE") ||
+                    mySqlColumns.getDataTypes().equalsIgnoreCase("DATETIME")) {
+                return true;
+            } else if (mySqlColumns.getDataTypes().equalsIgnoreCase("VARCHAR")) {
+                return Integer.parseInt(String.valueOf(columnData.get("character_maximum_length"))) == (mySqlColumns.getLength());
+            } else if (mySqlColumns.getDataTypes().equalsIgnoreCase("DECIMAL")) {
+                return Integer.parseInt(String.valueOf(columnData.get("numeric_precision"))) == (mySqlColumns.getLength()) &&
+                        Integer.parseInt(String.valueOf(columnData.get("numeric_scale"))) == (mySqlColumns.getScale());
+            }
+        }
+        return false;
+
     }
 
     public void isInsertTableValue(DefaultValuesModel defaultValuesModel) {
