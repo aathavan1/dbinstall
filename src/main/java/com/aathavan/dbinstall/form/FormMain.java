@@ -39,7 +39,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private JPasswordField txtPassword;
     private JButton btnCreate, btnClear, btnInstall, btnExit1, btnExit2;
     private JTabbedPane tabMain;
-    private ImageIcon backgroundImageIcon;
+    private final ImageIcon backgroundImageIcon;
 
     @Autowired
     private InstallLogic installService;
