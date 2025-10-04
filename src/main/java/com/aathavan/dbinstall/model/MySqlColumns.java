@@ -8,7 +8,7 @@ public class MySqlColumns {
     private int length;
     @Getter
     private int scale;
-
+    private String defaultvalue;
     @Getter
     private String columnname;
     private CommonEnum.DATATYPE columnDataType;
@@ -24,11 +24,19 @@ public class MySqlColumns {
         this.UNIQUEKEY = UNIQUEKEY;
     }
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.PRIMARYKEY unique) {
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY, String defaultvalue) {
         this.columnname = columnname;
         this.columnDataType = columnDataType;
         this.NULLABLE = NULLABLE;
-        this.PRIMARYKEY = unique;
+        this.UNIQUEKEY = UNIQUEKEY;
+        this.defaultvalue = defaultvalue;
+    }
+
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.PRIMARYKEY primarykey) {
+        this.columnname = columnname;
+        this.columnDataType = columnDataType;
+        this.NULLABLE = NULLABLE;
+        this.PRIMARYKEY = primarykey;
     }
 
     public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, int length, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
@@ -37,6 +45,15 @@ public class MySqlColumns {
         this.NULLABLE = NULLABLE;
         this.length = length;
         this.UNIQUEKEY = UNIQUEKEY;
+    }
+
+    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, int length, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY, String defaultvalue) {
+        this.columnname = columnname;
+        this.columnDataType = columnDataType;
+        this.NULLABLE = NULLABLE;
+        this.length = length;
+        this.UNIQUEKEY = UNIQUEKEY;
+        this.defaultvalue = defaultvalue;
     }
 
     public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, int length, int scale, CommonEnum.NULLABLE NULLABLE) {
@@ -58,6 +75,14 @@ public class MySqlColumns {
             sb.append(" UNIQUE ");
         if (PRIMARYKEY == CommonEnum.PRIMARYKEY.YES)
             sb.append(" PRIMARYKEY ");
+        if (defaultvalue != null && !defaultvalue.trim().isEmpty()) {
+            if (CommonEnum.DATATYPE.DATE == columnDataType)
+                sb.append(" DEFAULT (CURRENT_DATE()) ");
+            else if (CommonEnum.DATATYPE.DATETIME == columnDataType)
+                sb.append(" DEFAULT (CURRENT_TIMESTAMP) ");
+            else
+                sb.append(" DEFAULT '").append(defaultvalue).append("' ");
+        }
 
         return sb.toString();
     }

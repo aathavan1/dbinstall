@@ -5,6 +5,8 @@ import com.aathavan.dbinstall.model.MySqlColumns;
 import com.aathavan.dbinstall.model.MySqlTable;
 import org.springframework.stereotype.Component;
 
+import java.time.Year;
+
 @Component
 public class MasterTable {
 
@@ -22,9 +24,10 @@ public class MasterTable {
         MySqlTable mySqlTable = new MySqlTable("operator");
         mySqlTable.addColumns(new MySqlColumns("opercode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("opername", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("authtoken", CommonEnum.DATATYPE.VARCHAR, 100, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("password", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
-        mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "YES"));
 
         return mySqlTable;
     }
@@ -49,8 +52,18 @@ public class MasterTable {
         mySqlTable.addColumns(new MySqlColumns("catname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
         mySqlTable.addColumns(new MySqlColumns("mrprate", CommonEnum.DATATYPE.DECIMAL, 15, 3, CommonEnum.NULLABLE.NO));
         mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
-        mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO,"YES"));
+        return mySqlTable;
+    }
 
+
+    public MySqlTable insertComputerTable() {
+        MySqlTable mySqlTable = new MySqlTable("computer");
+        mySqlTable.addColumns(new MySqlColumns("loginoperator", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO,"0"));
+        mySqlTable.addColumns(new MySqlColumns("ipaddress", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("ipid", CommonEnum.DATATYPE.DECIMAL, 15, 3, CommonEnum.NULLABLE.NO));
+        mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO));
+        mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO,"YES"));
         return mySqlTable;
     }
 
