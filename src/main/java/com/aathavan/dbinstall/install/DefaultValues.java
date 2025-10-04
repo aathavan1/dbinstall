@@ -1,9 +1,11 @@
 package com.aathavan.dbinstall.install;
 
+import com.aathavan.dbinstall.common.CommonEnum;
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.common.Secutity;
 import com.aathavan.dbinstall.logic.CommonLogic;
 import com.aathavan.dbinstall.model.DefaultValuesModel;
+import com.aathavan.dbinstall.model.MySqlColumns;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,5 +36,15 @@ public class DefaultValues {
         defaultValuesModel.setColumnName(new LinkedList<>(List.of("companycode", "masterdbname", "trandbname", "financialyear")));
         defaultValuesModel.setColumnValues(new LinkedList<>(List.of(companyCode, companyCode + "amaster", companyCode + "s" + finYear, finYear)));
         return defaultValuesModel;
+    }
+
+    public DefaultValuesModel insertEmployeeValues(String dbName) {
+
+        DefaultValuesModel defaultValuesModel = new DefaultValuesModel("employee", dbName, true);
+        defaultValuesModel.setPrimaryColName("username");
+        defaultValuesModel.setColumnName(new LinkedList<>(List.of("opercode", "empname", "username", "email", "active", "createddate")));
+        defaultValuesModel.setColumnValues(new LinkedList<>(List.of("1", "Aathavan", "aathavan1122", "aathavan@gmail.com", "Y", dateValue)));
+        return defaultValuesModel;
+
     }
 }

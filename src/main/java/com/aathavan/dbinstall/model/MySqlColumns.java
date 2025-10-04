@@ -17,13 +17,6 @@ public class MySqlColumns {
     private CommonEnum.PRIMARYKEY PRIMARYKEY = CommonEnum.PRIMARYKEY.NO;
 
 
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
-        this.columnname = columnname;
-        this.columnDataType = columnDataType;
-        this.NULLABLE = NULLABLE;
-        this.UNIQUEKEY = UNIQUEKEY;
-    }
-
     public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY, String defaultvalue) {
         this.columnname = columnname;
         this.columnDataType = columnDataType;
@@ -37,14 +30,6 @@ public class MySqlColumns {
         this.columnDataType = columnDataType;
         this.NULLABLE = NULLABLE;
         this.PRIMARYKEY = primarykey;
-    }
-
-    public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, int length, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY) {
-        this.columnname = columnname;
-        this.columnDataType = columnDataType;
-        this.NULLABLE = NULLABLE;
-        this.length = length;
-        this.UNIQUEKEY = UNIQUEKEY;
     }
 
     public MySqlColumns(String columnname, CommonEnum.DATATYPE columnDataType, int length, CommonEnum.NULLABLE NULLABLE, CommonEnum.UNIQUEKEY UNIQUEKEY, String defaultvalue) {
@@ -74,7 +59,7 @@ public class MySqlColumns {
         if (UNIQUEKEY == CommonEnum.UNIQUEKEY.YES)
             sb.append(" UNIQUE ");
         if (PRIMARYKEY == CommonEnum.PRIMARYKEY.YES)
-            sb.append(" PRIMARYKEY ");
+            sb.append(" PRIMARY KEY ");
         if (defaultvalue != null && !defaultvalue.trim().isEmpty()) {
             if (CommonEnum.DATATYPE.DATE == columnDataType)
                 sb.append(" DEFAULT (CURRENT_DATE()) ");

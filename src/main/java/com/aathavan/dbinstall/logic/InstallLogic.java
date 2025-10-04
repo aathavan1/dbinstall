@@ -44,6 +44,7 @@ public class InstallLogic {
         lstMySqlTables.add(masterTable.insertProductTable());
         lstMySqlTables.add(masterTable.insertCategoryTable());
         lstMySqlTables.add(masterTable.insertComputerTable());
+        lstMySqlTables.add(masterTable.insertEmployeeTable());
 
         return lstMySqlTables;
     }
@@ -52,8 +53,7 @@ public class InstallLogic {
         List<Object> lstTableData = new ArrayList<>();
         lstTableData.add(defaultValues.insertOperatorValues(dbName));
         lstTableData.add(defaultValues.insertFileMainValues(dbName));
+        lstTableData.add(defaultValues.insertEmployeeValues(dbName));
         return lstTableData;
     }
-
-
 }
