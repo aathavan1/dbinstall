@@ -24,7 +24,7 @@ public class MasterTable {
         MySqlTable mySqlTable = new MySqlTable("operator");
         mySqlTable.addColumns(new MySqlColumns("opercode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.PRIMARYKEY.YES));
         mySqlTable.addColumns(new MySqlColumns("opername", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
-        mySqlTable.addColumns(new MySqlColumns("authtoken", CommonEnum.DATATYPE.VARCHAR, 100, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, null));
+        mySqlTable.addColumns(new MySqlColumns("authtoken", CommonEnum.DATATYPE.VARCHAR, 300, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("password", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "Y"));
         mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "YES"));

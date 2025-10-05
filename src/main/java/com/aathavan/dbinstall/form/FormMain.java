@@ -309,7 +309,16 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         try {
             CodeSource codeSource = FormMain.class.getProtectionDomain().getCodeSource();
             File filePath = new File(codeSource.getLocation().getFile());
-            File file = new File(filePath.getParent() + "/" + "CompanyDetail.txt");
+            while (filePath.getPath().contains("WEB-INF") || filePath.getPath().contains("BOOT-INF")) {
+                filePath = new File(filePath.getParent());
+            }
+            String fileLopcation = filePath.getParent().replace("file:\\", "");
+            fileLopcation = fileLopcation.replace("file:", "");
+
+            fileLopcation = fileLopcation.replace("nested:", "");
+            fileLopcation = fileLopcation.replace("%20", " ");
+
+            File file = new File(fileLopcation + File.separatorChar + "CompanyDetail.txt");
             if (!file.exists()) {
                 JOptionPane.showMessageDialog(getContentPane(), "Company Details Not Found... Create a New Company");
                 tabMain.setSelectedIndex(0);
@@ -534,9 +543,16 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
     private void setTxtFileTiValues() throws Exception {
         CodeSource codeSource = FormMain.class.getProtectionDomain().getCodeSource();
         File filePath = new File(codeSource.getLocation().getFile());
+        while (filePath.getPath().contains("WEB-INF") || filePath.getPath().contains("BOOT-INF")) {
+            filePath = new File(filePath.getParent());
+        }
+        String fileLopcation = filePath.getParent().replace("file:\\", "");
+        fileLopcation = fileLopcation.replace("file:", "");
 
+        fileLopcation = fileLopcation.replace("nested:", "");
+        fileLopcation = fileLopcation.replace("%20", " ");
 
-        File file = new File(filePath.getParent() + "/" + "CompanyDetail.txt");
+        File file = new File(fileLopcation + File.separatorChar + "CompanyDetail.txt");
         FileWriter fileWriter = new FileWriter(file);
         fileWriter.write(txtServerIp.getText().trim() + "\n");
         fileWriter.write(Secutity.encrypter(txtPortNo.getText()) + "\n");
