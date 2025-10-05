@@ -12,7 +12,7 @@ public class DbInstallCommon {
         return (int) (jComponent.getY() + jComponent.getHeight() + (jPanel.getHeight() * per / 100));
     }
 
-    public static String prepareConnectionString(String serverIp, String portNo) {
-        return "jdbc:mysql://" + serverIp + ":" + portNo + "/";
+    public static String prepareConnectionString(String serverIp, String portNo, String dbName) {
+        return "jdbc:mysql://" + serverIp + ":" + portNo + "/"+dbName+"?ssl-mode=REQUIRED";
     }
 }

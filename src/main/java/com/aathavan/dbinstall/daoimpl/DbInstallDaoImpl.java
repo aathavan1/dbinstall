@@ -38,6 +38,8 @@ public class DbInstallDaoImpl implements DbInstallDao {
     @Override
     public void executeQuery(String query, JdbcTemplate jdbcTemplate) {
         try {
+            if (query.toLowerCase().contains("create table"))
+                jdbcTemplate.execute("SET SESSION sql_require_primary_key = 0  ");
             jdbcTemplate.execute(query);
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -43,8 +43,7 @@ public class ProcedureProcess {
     private void dropOldProcedure(JdbcTemplate jdbcTemplateForDb, String dbName) {
         List<Map<String, Object>> lstDropProcedure = dbInstallDao.getData("SHOW PROCEDURE STATUS  WHERE Db = '" + dbName + "'", jdbcTemplateForDb);
         for (Map<String, Object> map : lstDropProcedure) {
-            logger.error("Droping Procedure spsave" + map.get("Name"));
-            FormMain.setTextArea("Droping Procedure spsave" + map.get("Name"));
+            FormMain.setTextArea("Droping Procedure  " + map.get("Name"));
             dbInstallDao.executeQuery("DROP PROCEDURE " + map.get("Name"), jdbcTemplateForDb);
         }
     }

@@ -17,7 +17,7 @@ public class ConnectionConfig {
         try {
             hikariDataSource = new HikariDataSource();
             hikariDataSource.setDriverClassName(DbInstallConstant.DRIVER_CLASS_NAME);
-            hikariDataSource.setJdbcUrl(DbInstallCommon.prepareConnectionString(serverIp, portNo) + dbName);
+            hikariDataSource.setJdbcUrl(DbInstallCommon.prepareConnectionString(serverIp, portNo,dbName));
             hikariDataSource.setUsername(userName);
             hikariDataSource.setPassword(password);
             hikariDataSource.getConnection();

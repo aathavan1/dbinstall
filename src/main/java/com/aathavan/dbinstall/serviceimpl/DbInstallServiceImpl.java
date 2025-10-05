@@ -35,6 +35,8 @@ public class DbInstallServiceImpl implements DbInstallService {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DbInstallConstant.getDataSource());
             boolean isFreshDb = !dbInstallDao.checkExist(tableAlterProcess.prepareStringForDbExist(dbName), jdbcTemplate);
+//            ;
+
             if (isFreshDb) {
                 FormMain.setTextArea("Creating DataBase " + dbName);
                 dbInstallDao.executeQuery("CREATE DATABASE " + dbName, jdbcTemplate);
