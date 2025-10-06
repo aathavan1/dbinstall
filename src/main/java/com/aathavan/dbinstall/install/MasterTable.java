@@ -25,6 +25,7 @@ public class MasterTable {
         mySqlTable.addColumns(new MySqlColumns("opercode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.PRIMARYKEY.YES));
         mySqlTable.addColumns(new MySqlColumns("opername", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("authtoken", CommonEnum.DATATYPE.VARCHAR, 300, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, null));
+        mySqlTable.addColumns(new MySqlColumns("tokenexpiry", CommonEnum.DATATYPE.DATETIME, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("password", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "Y"));
         mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "YES"));
@@ -64,6 +65,7 @@ public class MasterTable {
         mySqlTable.addColumns(new MySqlColumns("ipid", CommonEnum.DATATYPE.DECIMAL, 15, 3, CommonEnum.NULLABLE.NO));
         mySqlTable.addColumns(new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "Y"));
         mySqlTable.addColumns(new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "YES"));
+        mySqlTable.addColumns(new MySqlColumns("lastlogin", CommonEnum.DATATYPE.DATETIME, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "YES"));
         return mySqlTable;
     }
 
