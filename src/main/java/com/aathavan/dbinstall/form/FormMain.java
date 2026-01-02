@@ -211,6 +211,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         btnClear = btnCreation("Clear", x, y, (int) (compWidth / 1.6), (int) (compHeight * 1.2), false, font);
         lblCompanyCreationImg.add(btnClear);
 
+
         x = DbInstallCommon.horizontalGap(panelCompanyCreation, btnClear, 5);
 
         btnCreate = btnCreation("Create", x, y, btnClear.getWidth(), btnClear.getHeight(), true, font);
@@ -318,7 +319,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
             fileLopcation = fileLopcation.replace("nested:", "");
             fileLopcation = fileLopcation.replace("%20", " ");
 
-            File file = new File(fileLopcation + File.separatorChar + "CompanyDetail.txt");
+            File file = new File(fileLopcation + File.separatorChar + "application.properties");
             if (!file.exists()) {
                 JOptionPane.showMessageDialog(getContentPane(), "Company Details Not Found... Create a New Company");
                 tabMain.setSelectedIndex(0);
@@ -326,12 +327,12 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
                 List<String> fileDetail = Files.readAllLines(Paths.get(file.toURI()));
 
                 ServerCredentials serverCredentials = new ServerCredentials();
-                serverCredentials.setServerip(fileDetail.getFirst());
-                serverCredentials.setPortno(Secutity.decrypter(fileDetail.get(1)));
-                serverCredentials.setUsername(Secutity.decrypter(fileDetail.get(2)));
-                serverCredentials.setPassword(Secutity.decrypter(fileDetail.get(3)));
-                serverCredentials.setCompanycode(Secutity.decrypter(fileDetail.get(4)));
-                serverCredentials.setCompanyname(Secutity.decrypter(fileDetail.get(5)));
+                serverCredentials.setServerip(fileDetail.getFirst().split("=")[1].trim());
+                serverCredentials.setPortno(Secutity.decrypter(fileDetail.get(1).split("=")[1].trim()));
+                serverCredentials.setUsername(Secutity.decrypter(fileDetail.get(2).split("=")[1].trim()));
+                serverCredentials.setPassword(Secutity.decrypter(fileDetail.get(3).split("=")[1].trim()));
+                serverCredentials.setCompanycode(Secutity.decrypter(fileDetail.get(4).split("=")[1].trim()));
+                serverCredentials.setCompanyname(Secutity.decrypter(fileDetail.get(5).split("=")[1].trim()));
 
                 DbInstallConstant.setServerCredentials(serverCredentials);
 
@@ -552,14 +553,14 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         fileLopcation = fileLopcation.replace("nested:", "");
         fileLopcation = fileLopcation.replace("%20", " ");
 
-        File file = new File(fileLopcation + File.separatorChar + "CompanyDetail.txt");
+        File file = new File(fileLopcation + File.separatorChar + "application.properties");
         FileWriter fileWriter = new FileWriter(file);
-        fileWriter.write(txtServerIp.getText().trim() + "\n");
-        fileWriter.write(Secutity.encrypter(txtPortNo.getText()) + "\n");
-        fileWriter.write(Secutity.encrypter(txtUsername.getText()) + "\n");
-        fileWriter.write(Secutity.encrypter(String.valueOf(txtPassword.getPassword())) + "\n");
-        fileWriter.write(Secutity.encrypter(txtCompanyCode.getText()) + "\n");
-        fileWriter.write(Secutity.encrypter(txtCompanyName.getText()) + "\n");
+        fileWriter.write("credentials.serverip=" + txtServerIp.getText().trim() + "\n");
+        fileWriter.write("credentials.portno = " + Secutity.encrypter(txtPortNo.getText()) + "\n");
+        fileWriter.write("credentials.username=" + Secutity.encrypter(txtUsername.getText()) + "\n");
+        fileWriter.write("credentials.password=" + Secutity.encrypter(String.valueOf(txtPassword.getPassword())) + "\n");
+        fileWriter.write("credentials.companycode=" + Secutity.encrypter(txtCompanyCode.getText()) + "\n");
+        fileWriter.write("credentials.companyname=" + Secutity.encrypter(txtCompanyName.getText()) + "\n");
         fileWriter.close();
 
     }

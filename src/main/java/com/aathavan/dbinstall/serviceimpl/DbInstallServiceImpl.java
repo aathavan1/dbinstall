@@ -14,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.management.Query;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class DbInstallServiceImpl implements DbInstallService {
@@ -31,11 +34,10 @@ public class DbInstallServiceImpl implements DbInstallService {
 
 
     @Override
-    public void installTable(List<MySqlTable> lstTables, String dbName) {
+    public void installTable(List<MySqlTable> lstTables, List<Object> lstPreTable, String dbName) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DbInstallConstant.getDataSource());
             boolean isFreshDb = !dbInstallDao.checkExist(tableAlterProcess.prepareStringForDbExist(dbName), jdbcTemplate);
-//            ;
 
             if (isFreshDb) {
                 FormMain.setTextArea("Creating DataBase " + dbName);
@@ -43,14 +45,33 @@ public class DbInstallServiceImpl implements DbInstallService {
             }
             JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(new ConnectionConfig().getDbDataSource(dbName));
 
+
+            if (dbName.toLowerCase().contains("master")) {
+                if (isFreshDb || !prepareStringForTableExist("pretable", jdbcTemplateForDb)) {
+                    dbInstallDao.executeQuery((String) lstPreTable.getFirst(), jdbcTemplateForDb);
+                    for (Object tableData : lstPreTable) {
+                        if (lstPreTable.indexOf(tableData) == 0) continue;
+                        Map<String, Object> mapTableData = (Map<String, Object>) tableData;
+                        dbInstallDao.executeQuery((String) mapTableData.get("query"), jdbcTemplateForDb);
+                    }
+                } else {
+                    for (Object tableData : lstPreTable) {
+                        if (lstPreTable.indexOf(tableData) == 0) continue;
+                        Map<String, Object> mapTableData = (Map<String, Object>) tableData;
+                        if (!checkPreTableDefaultValues((String) mapTableData.get("primarykey"), jdbcTemplateForDb))
+                            dbInstallDao.executeQuery((String) mapTableData.get("query"), jdbcTemplateForDb);
+                    }
+                }
+
+
+            }
             List<MySqlTable> lstAlterTables = new LinkedList<>();
             List<MySqlTable> lstInstallTables = new LinkedList<>();
 
             for (MySqlTable mySqlTable : lstTables) {
                 if (isFreshDb || !prepareStringForTableExist(mySqlTable.getTablename(), jdbcTemplateForDb))
                     lstInstallTables.add(mySqlTable);
-                else
-                    lstAlterTables.add(mySqlTable);
+                else lstAlterTables.add(mySqlTable);
             }
 
             FormMain.setTextArea("Creating Missing Table Process Starts");
@@ -95,7 +116,15 @@ public class DbInstallServiceImpl implements DbInstallService {
         }
     }
 
+
     private boolean prepareStringForTableExist(String tableName, JdbcTemplate jdbcTemplate) throws Exception {
         return dbInstallDao.checkExist("SHOW TABLES LIKE '" + tableName + "' ", jdbcTemplate);
+    }
+
+    private boolean checkPreTableDefaultValues(String tableCode, JdbcTemplate jdbcTemplate) throws Exception {
+        String query = "select tablename from pretable where tablecode = " + tableCode;
+
+        List<Map<String, Object>> lstPreTableData = dbInstallDao.getData(query, jdbcTemplate);
+        return !lstPreTableData.isEmpty();
     }
 }

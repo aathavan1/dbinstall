@@ -13,21 +13,18 @@ import javax.swing.*;
 public class DbinstallApplication {
 
     public static void main(String[] args) {
-        try{
+        try {
+            if ((System.getProperties().getProperty("os.name") != null
+                    && System.getProperties().getProperty("os.name").toLowerCase().contains("windows"))) {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
 
+            UIManager.put("Button.defaultButtonFollowsFocus", true);
+            ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
 
-
-        if ((System.getProperties().getProperty("os.name") != null
-                && System.getProperties().getProperty("os.name").toLowerCase().contains("windows"))) {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-
-        UIManager.put("Button.defaultButtonFollowsFocus", true);
-        ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-
-        FormMain formMain = context.getBean(FormMain.class);
-        formMain.setVisible(true);
-        DbInstallConstant.setContext(context);
+            FormMain formMain = context.getBean(FormMain.class);
+            formMain.setVisible(true);
+            DbInstallConstant.setContext(context);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

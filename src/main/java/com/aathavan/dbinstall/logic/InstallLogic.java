@@ -32,12 +32,14 @@ public class InstallLogic {
             return;
         }
         String masterDBName = DbInstallConstant.getServerCredentials().getCompanycode() + "amaster";
-        dbInstallService.installTable(getMasterTables(), masterDBName);
+
+        dbInstallService.installTable(getMasterTables(), masterTable.preparePreTables(), masterDBName);
         dbInstallService.defaultValues(insertDefaultValues(masterDBName));
     }
 
 
     private List<MySqlTable> getMasterTables() {
+
         List<MySqlTable> lstMySqlTables = new LinkedList<>();
         lstMySqlTables.add(masterTable.insertFileMainTable());
         lstMySqlTables.add(masterTable.insertOperatorTable());

@@ -16,6 +16,7 @@ public class DbInstallConstant {
 
     public static class DateFormat {
         public static final DateTimeFormatter SAVEDATEFORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        public static final DateTimeFormatter SAVETIMEFORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
     }
 
 

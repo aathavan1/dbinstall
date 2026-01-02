@@ -1,7 +1,12 @@
 package com.aathavan.dbinstall.common;
 
-import javax.swing.*;
+import org.springframework.stereotype.Component;
 
+import javax.swing.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Component
 public class DbInstallCommon {
 
     public static int horizontalGap(JPanel jPanel, JComponent jComponent, double per) {
@@ -13,6 +18,14 @@ public class DbInstallCommon {
     }
 
     public static String prepareConnectionString(String serverIp, String portNo, String dbName) {
-        return "jdbc:mysql://" + serverIp + ":" + portNo + "/"+dbName+"?ssl-mode=REQUIRED";
+        return "jdbc:mysql://" + serverIp + ":" + portNo + "/" + dbName + "?ssl-mode=REQUIRED";
+    }
+
+    public String getCurrentDate() {
+        return DbInstallConstant.DateFormat.SAVEDATEFORMAT.format(LocalDate.now());
+    }
+
+    public String getCurrentTime() {
+        return DbInstallConstant.DateFormat.SAVETIMEFORMAT.format(LocalDateTime.now());
     }
 }
