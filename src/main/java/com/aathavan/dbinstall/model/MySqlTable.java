@@ -11,6 +11,9 @@ public class MySqlTable {
     @Getter
     private String tablename;
     private String constrains = null;
+    @Setter
+    @Getter
+    private boolean master;
     @Getter
     private boolean procedureReq = false;
     @Getter

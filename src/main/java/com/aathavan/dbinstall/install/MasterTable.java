@@ -59,16 +59,17 @@ public class MasterTable {
 
     public MySqlTable insertFileMainTable() {
         MySqlTable mySqlTable = new MySqlTable("filemain");
-        mySqlTable.addColumns(new MySqlColumns("companycode", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.YES, null));
+        mySqlTable.addColumns(new MySqlColumns("compcode", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.YES, null));
         mySqlTable.addColumns(new MySqlColumns("masterdbname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("trandbname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
-        mySqlTable.addColumns(new MySqlColumns("financialyear", CommonEnum.DATATYPE.VARCHAR, 5, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
+        mySqlTable.addColumns(new MySqlColumns("finyear", CommonEnum.DATATYPE.VARCHAR, 5, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
 
         return mySqlTable;
     }
 
     public MySqlTable insertOperatorTable() {
         MySqlTable mySqlTable = new MySqlTable("operator");
+        mySqlTable.setMaster(true);
         mySqlTable.addColumns(new MySqlColumns("opercode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.PRIMARYKEY.YES));
         mySqlTable.addColumns(new MySqlColumns("opername", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
 //        mySqlTable.addColumns(new MySqlColumns("authtoken", CommonEnum.DATATYPE.VARCHAR, 300, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, null));
@@ -83,6 +84,7 @@ public class MasterTable {
 
     public MySqlTable insertProductTable() {
         MySqlTable mySqlTable = new MySqlTable("product", true);
+        mySqlTable.setMaster(true);
         mySqlTable.addColumns(new MySqlColumns("productcode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("productname", CommonEnum.DATATYPE.VARCHAR, 29, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("categorycode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
@@ -97,6 +99,7 @@ public class MasterTable {
 
     public MySqlTable insertCategoryTable() {
         MySqlTable mySqlTable = new MySqlTable("category");
+        mySqlTable.setMaster(true);
         mySqlTable.addColumns(new MySqlColumns("catcode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("catname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("mrprate", CommonEnum.DATATYPE.DECIMAL, 15, 3, CommonEnum.NULLABLE.NO));
@@ -108,6 +111,7 @@ public class MasterTable {
 
     public MySqlTable insertComputerTable() {
         MySqlTable mySqlTable = new MySqlTable("computer");
+        mySqlTable.setMaster(true);
         mySqlTable.addColumns(new MySqlColumns("loginoperator", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "0"));
         mySqlTable.addColumns(new MySqlColumns("ipaddress", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("ipid", CommonEnum.DATATYPE.DECIMAL, 15, 3, CommonEnum.NULLABLE.NO));
@@ -118,6 +122,7 @@ public class MasterTable {
 
     public MySqlTable insertEmployeeTable() {
         MySqlTable mySqlTable = new MySqlTable("employee");
+        mySqlTable.setMaster(true);
         mySqlTable.addColumns(new MySqlColumns("opercode", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.NO, CommonEnum.PRIMARYKEY.YES));
         mySqlTable.addColumns(new MySqlColumns("empname", CommonEnum.DATATYPE.VARCHAR, 30, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, null));
         mySqlTable.addColumns(new MySqlColumns("username", CommonEnum.DATATYPE.VARCHAR, 20, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, null));
