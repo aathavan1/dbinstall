@@ -1,5 +1,6 @@
 package com.aathavan.dbinstall.serviceimpl;
 
+import com.aathavan.dbinstall.common.CommonValues;
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.config.ConnectionConfig;
 import com.aathavan.dbinstall.dao.DbInstallDao;
@@ -14,11 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.management.Query;
+import javax.sql.DataSource;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class DbInstallServiceImpl implements DbInstallService {
@@ -34,7 +34,7 @@ public class DbInstallServiceImpl implements DbInstallService {
 
 
     @Override
-    public void installTable(List<MySqlTable> lstTables, List<Object> lstPreTable, String dbName) {
+    public boolean installPrefixTable(List<Object> lstPreTable, String dbName) {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(DbInstallConstant.getDataSource());
             boolean isFreshDb = !dbInstallDao.checkExist(tableAlterProcess.prepareStringForDbExist(dbName), jdbcTemplate);
@@ -43,31 +43,45 @@ public class DbInstallServiceImpl implements DbInstallService {
                 FormMain.setTextArea("Creating DataBase " + dbName);
                 dbInstallDao.executeQuery("CREATE DATABASE " + dbName, jdbcTemplate);
             }
-            JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(new ConnectionConfig().getDbDataSource(dbName));
+            DataSource dataSource = new ConnectionConfig().getDbDataSource(dbName);
+            JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(dataSource);
+            if (dbName.contains("master"))
+                CommonValues.MASTERDATASOURCE = dataSource;
 
 
-            if (dbName.toLowerCase().contains("master")) {
-                if (isFreshDb || !prepareStringForTableExist("pretable", jdbcTemplateForDb)) {
-                    dbInstallDao.executeQuery((String) lstPreTable.getFirst(), jdbcTemplateForDb);
-                    for (Object tableData : lstPreTable) {
-                        if (lstPreTable.indexOf(tableData) == 0) continue;
-                        Map<String, Object> mapTableData = (Map<String, Object>) tableData;
-                        dbInstallDao.executeQuery((String) mapTableData.get("query"), jdbcTemplateForDb);
-                    }
-                } else {
-                    for (Object tableData : lstPreTable) {
-                        if (lstPreTable.indexOf(tableData) == 0) continue;
-                        Map<String, Object> mapTableData = (Map<String, Object>) tableData;
-                        if (!checkPreTableDefaultValues((String) mapTableData.get("primarykey"), jdbcTemplateForDb))
-                            dbInstallDao.executeQuery((String) mapTableData.get("query"), jdbcTemplateForDb);
-                    }
+            if (isFreshDb || !prepareStringForTableExist("pretable", jdbcTemplateForDb)) {
+                dbInstallDao.executeQuery((String) lstPreTable.getFirst(), jdbcTemplateForDb);
+                for (Object tableData : lstPreTable) {
+                    if (lstPreTable.indexOf(tableData) == 0) continue;
+                    Map<String, Object> mapTableData = (Map<String, Object>) tableData;
+                    dbInstallDao.executeQuery((String) mapTableData.get("query"), jdbcTemplateForDb);
                 }
-
-
+            } else {
+                for (Object tableData : lstPreTable) {
+                    if (lstPreTable.indexOf(tableData) == 0) continue;
+                    Map<String, Object> mapTableData = (Map<String, Object>) tableData;
+                    if (!checkPreTableDefaultValues((String) mapTableData.get("primarykey"), jdbcTemplateForDb))
+                        dbInstallDao.executeQuery((String) mapTableData.get("query"), jdbcTemplateForDb);
+                }
             }
+            return isFreshDb;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void installTable(List<MySqlTable> lstTables, String dbName, boolean isFreshDb) {
+        try {
+
             List<MySqlTable> lstAlterTables = new LinkedList<>();
             List<MySqlTable> lstInstallTables = new LinkedList<>();
-
+            JdbcTemplate jdbcTemplateForDb;
+            if (dbName.contains("master"))
+                jdbcTemplateForDb = new JdbcTemplate(CommonValues.MASTERDATASOURCE);
+            else {
+                jdbcTemplateForDb = new JdbcTemplate(new ConnectionConfig().getDbDataSource(dbName));
+            }
             for (MySqlTable mySqlTable : lstTables) {
                 if (isFreshDb || !prepareStringForTableExist(mySqlTable.getTablename(), jdbcTemplateForDb))
                     lstInstallTables.add(mySqlTable);

@@ -19,7 +19,7 @@ public class CommonEnum {
     }
 
     public enum DATATYPE {
-        VARCHAR, INT, DATE, DATETIME, DECIMAL,LONGBLOB
+        VARCHAR, INT, DATE, DATETIME, DECIMAL, LONGBLOB, TIME
     }
 
     public enum NULLABLE {
@@ -29,9 +29,4 @@ public class CommonEnum {
     public enum UNIQUEKEY {
         YES, NO
     }
-
-    public enum PRIMARYKEY {
-        YES, NO
-    }
-
 }

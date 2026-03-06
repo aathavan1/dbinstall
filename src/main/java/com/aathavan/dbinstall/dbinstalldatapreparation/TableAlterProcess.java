@@ -2,6 +2,7 @@ package com.aathavan.dbinstall.dbinstalldatapreparation;
 
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.dao.DbInstallDao;
+import com.aathavan.dbinstall.daoimpl.DbInstallDaoImpl;
 import com.aathavan.dbinstall.form.FormMain;
 import com.aathavan.dbinstall.model.DefaultValuesModel;
 import com.aathavan.dbinstall.model.MySqlColumns;
@@ -24,12 +25,16 @@ public class TableAlterProcess {
 
     public void mySqlAlterColumnProcess(MySqlTable mySqlTable, String dbName, JdbcTemplate jdbcTemplate) {
         try {
+
+            String tablePrefix = new DbInstallDaoImpl().getTablePrefix(mySqlTable.getTablename());
+            mySqlTable.setDefaultColumn();
             for (MySqlColumns mySqlColumns : mySqlTable.getLstColumns()) {
-                if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName)) {
-                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ADD COLUMN " + mySqlColumns.getColumn();
+                mySqlColumns.setTablePrefix(tablePrefix);
+                if (!checkColumnExist(mySqlTable.getTablename(), mySqlColumns.getPrefixColumnName(), jdbcTemplate, dbName)) {
+                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " ADD COLUMN " + mySqlColumns.getColumn(true);
                     dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
-                } else if (!prepareStringForColumnDataTypes(mySqlTable.getTablename(), mySqlColumns.getColumnname(), jdbcTemplate, dbName, mySqlColumns)) {
-                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " MODIFY COLUMN " + mySqlColumns.getColumn();
+                } else if (!prepareStringForColumnDataTypes(mySqlTable.getTablename(), mySqlColumns.getPrefixColumnName(), jdbcTemplate, dbName, mySqlColumns)) {
+                    String alterQuery = "ALTER TABLE " + mySqlTable.getTablename() + " MODIFY COLUMN " + mySqlColumns.getColumn(true);
                     dbInstallDao.executeQuery(alterQuery, jdbcTemplate);
                 }
             }
@@ -103,15 +108,15 @@ public class TableAlterProcess {
             NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(DbInstallConstant.getDataSource());
 
             List<Map<String, Object>> lstTableValues = dbInstallDao.checkDataForDefaultValues(defaultValuesModel);
-
-
+            String tablePrefix = new DbInstallDaoImpl().getTablePrefix(defaultValuesModel.getTablename());
+            defaultValuesModel.setTablePrefix(tablePrefix);
             List<Map<String, Object>> lstTableValuesForUpdate = defaultValuesModel.getData().stream().filter(
-                    defVal -> lstTableValues.stream().anyMatch(tblVal -> String.valueOf(tblVal.get(defaultValuesModel.getPrimaryColName()))
-                            .equalsIgnoreCase(String.valueOf(defVal.get(defaultValuesModel.getPrimaryColName()))))).toList();
+                    defVal -> lstTableValues.stream().anyMatch(tblVal -> String.valueOf(tblVal.get("id"))
+                            .equalsIgnoreCase(String.valueOf(defVal.get(tablePrefix + "id"))))).toList();
 
             List<Map<String, Object>> lstTableValuesForInsert = defaultValuesModel.getData().stream().filter(
-                    defVal -> lstTableValues.stream().noneMatch(tblVal -> String.valueOf(tblVal.get(defaultValuesModel.getPrimaryColName()))
-                            .equalsIgnoreCase(String.valueOf(defVal.get(defaultValuesModel.getPrimaryColName()))))).toList();
+                    defVal -> lstTableValues.stream().noneMatch(tblVal -> String.valueOf(tblVal.get("id"))
+                            .equalsIgnoreCase(String.valueOf(defVal.get(tablePrefix + "id"))))).toList();
 
 
             if (!lstTableValuesForInsert.isEmpty()) {

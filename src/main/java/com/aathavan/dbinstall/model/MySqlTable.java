@@ -1,8 +1,15 @@
 package com.aathavan.dbinstall.model;
 
+import com.aathavan.dbinstall.common.CommonEnum;
+import com.aathavan.dbinstall.dao.DbInstallDao;
+import com.aathavan.dbinstall.daoimpl.DbInstallDaoImpl;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,8 +26,10 @@ public class MySqlTable {
     @Getter
     @Setter
     private String dbname;
+    private String tablePrefix = null;
     @Getter
     private List<MySqlColumns> lstColumns = new LinkedList<>();
+
 
     public MySqlTable(String tableName) {
         this.tablename = tableName;
@@ -40,12 +49,34 @@ public class MySqlTable {
         this.constrains = constrain;
     }
 
+    public void setDefaultColumn() {
+        if (master)
+            lstColumns.addAll(new LinkedList<>(Arrays.asList(
+                    new MySqlColumns("active", CommonEnum.DATATYPE.VARCHAR, 1, CommonEnum.NULLABLE.NO, CommonEnum.UNIQUEKEY.NO, "Y"),
+                    new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, "YES"),
+                    new MySqlColumns("createdtime", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, "YES"),
+                    new MySqlColumns("createdby", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, "0"))));
+        else {
+            lstColumns.addAll(new LinkedList<>(Arrays.asList(
+                    new MySqlColumns("createddate", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, "YES"),
+                    new MySqlColumns("createdtime", CommonEnum.DATATYPE.DATE, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, "YES"),
+                    new MySqlColumns("createdby", CommonEnum.DATATYPE.INT, CommonEnum.NULLABLE.YES, CommonEnum.UNIQUEKEY.NO, "0"))));
+
+        }
+    }
 
     public String getTable() {
+
         StringBuilder sb = new StringBuilder();
+        if (tablePrefix == null) {
+            tablePrefix = new DbInstallDaoImpl().getTablePrefix(tablename);
+        }
+        setDefaultColumn();
         sb.append("CREATE TABLE ").append(tablename).append(" (");
+        if (tablePrefix != null)
+            sb.append(tablePrefix).append("id INT PRIMARY KEY DEFAULT 0 ,\n");
         for (MySqlColumns mySqlColumns : lstColumns) {
-            sb.append(mySqlColumns.getColumn()).append(" ,\n");
+            sb.append(tablePrefix).append(mySqlColumns.getColumn(false)).append(" ,\n");
         }
         if (constrains != null && !constrains.isEmpty()) {
             sb.append(constrains).append(")");

@@ -1,5 +1,6 @@
 package com.aathavan.dbinstall.daoimpl;
 
+import com.aathavan.dbinstall.common.CommonValues;
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.config.ConnectionConfig;
 import com.aathavan.dbinstall.dao.DbInstallDao;
@@ -9,6 +10,7 @@ import com.aathavan.dbinstall.query.Querry;
 import com.aathavan.dbinstall.serviceimpl.DbInstallServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,7 +52,7 @@ public class DbInstallDaoImpl implements DbInstallDao {
     @Override
     public List<Map<String, Object>> checkDataForDefaultValues(DefaultValuesModel defaultValuesModel) {
         try {
-            JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(new ConnectionConfig().getDbDataSource(defaultValuesModel.getDbname()));
+            JdbcTemplate jdbcTemplateForDb = new JdbcTemplate(CommonValues.MASTERDATASOURCE);
             return jdbcTemplateForDb.queryForList(querry.checkDataForDefaultValues(defaultValuesModel.getTablename()));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -62,5 +64,15 @@ public class DbInstallDaoImpl implements DbInstallDao {
     @Override
     public List<Map<String, Object>> getData(String query, JdbcTemplate jdbcTemplate) {
         return jdbcTemplate.queryForList(query);
+    }
+
+    @Override
+    public String getTablePrefix(String tableName) {
+        try {
+            return new JdbcTemplate(CommonValues.MASTERDATASOURCE).queryForObject(new Querry().getTablePrefix(), String.class, tableName);
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e.getMessage());
+            return null;
+        }
     }
 }

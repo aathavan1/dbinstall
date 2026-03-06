@@ -22,7 +22,6 @@ public class DefaultValues {
 
     public DefaultValuesModel insertOperatorValues(String dbName) {
         DefaultValuesModel defaultValuesModel = new DefaultValuesModel("operator", dbName, true);
-        defaultValuesModel.setPrimaryColName("opercode");
         defaultValuesModel.setColumnName(new LinkedList<>(List.of("opercode", "opername", "password", "active", "createddate")));
         defaultValuesModel.setColumnValues(new LinkedList<>(List.of("1", "Administrator", Secutity.encrypter("123"), "Y", dateValue)));
         return defaultValuesModel;
@@ -31,9 +30,8 @@ public class DefaultValues {
     public DefaultValuesModel insertFileMainValues(String dbName) {
         String finYear = String.valueOf(commonLogic.getFinYearByDate());
         String companyCode = DbInstallConstant.getServerCredentials().getCompanycode();
-        DefaultValuesModel defaultValuesModel = new DefaultValuesModel("filemain", dbName);
-        defaultValuesModel.setPrimaryColName("companycode");
-        defaultValuesModel.setColumnName(new LinkedList<>(List.of("companycode", "masterdbname", "trandbname", "financialyear")));
+        DefaultValuesModel defaultValuesModel = new DefaultValuesModel("filemain", dbName, false);
+        defaultValuesModel.setColumnName(new LinkedList<>(List.of("compcode", "masterdbname", "trandbname", "finyear")));
         defaultValuesModel.setColumnValues(new LinkedList<>(List.of(companyCode, companyCode + "amaster", companyCode + "s" + finYear, finYear)));
         return defaultValuesModel;
     }
@@ -41,7 +39,6 @@ public class DefaultValues {
     public DefaultValuesModel insertEmployeeValues(String dbName) {
 
         DefaultValuesModel defaultValuesModel = new DefaultValuesModel("employee", dbName, true);
-        defaultValuesModel.setPrimaryColName("username");
         defaultValuesModel.setColumnName(new LinkedList<>(List.of("opercode", "empname", "username", "email", "active", "createddate")));
         defaultValuesModel.setColumnValues(new LinkedList<>(List.of("1", "Aathavan", "aathavan1122", "aathavan@gmail.com", "Y", dateValue)));
         return defaultValuesModel;

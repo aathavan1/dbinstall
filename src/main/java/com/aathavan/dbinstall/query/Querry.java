@@ -15,8 +15,13 @@ public class Querry {
     public String checkDataForDefaultValues(String tableName) {
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ").append(tableName);
-
         return sb.toString();
     }
 
+    public String getTablePrefix() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select concat(prefix,'_') from pretable where tablename =? limit 1");
+
+        return sb.toString();
+    }
 }

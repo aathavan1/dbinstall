@@ -5,7 +5,11 @@ import com.aathavan.dbinstall.model.MySqlTable;
 import java.util.List;
 
 public interface DbInstallService {
-    void installTable(List<MySqlTable> masterTables, List<Object> lstPretable, String masterDBName);
+
+
+    boolean installPrefixTable(List<Object> lstPretable, String masterDBName);
+
+    void installTable(List<MySqlTable> masterTables, String masterDBName, boolean isFredhDb);
 
     void defaultValues(List<Object> objects);
 

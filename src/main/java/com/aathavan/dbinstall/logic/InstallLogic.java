@@ -1,5 +1,6 @@
 package com.aathavan.dbinstall.logic;
 
+import com.aathavan.dbinstall.common.CommonValues;
 import com.aathavan.dbinstall.common.DbInstallConstant;
 import com.aathavan.dbinstall.form.FormMain;
 import com.aathavan.dbinstall.install.DefaultValues;
@@ -31,10 +32,13 @@ public class InstallLogic {
             FormMain.setTextArea("Company Details Not Found...!");
             return;
         }
-        String masterDBName = DbInstallConstant.getServerCredentials().getCompanycode() + "amaster";
 
-        dbInstallService.installTable(getMasterTables(), masterTable.preparePreTables(), masterDBName);
-        dbInstallService.defaultValues(insertDefaultValues(masterDBName));
+        CommonValues.MASTERDB = DbInstallConstant.getServerCredentials().getCompanycode() + "master";
+        CommonValues.TRANDB = DbInstallConstant.getServerCredentials().getCompanycode() + "tran";
+        CommonValues.LOGDB = DbInstallConstant.getServerCredentials().getCompanycode() + "log";
+        boolean isFredhDb = dbInstallService.installPrefixTable(masterTable.preparePreTables(), CommonValues.MASTERDB);
+        dbInstallService.installTable(getMasterTables(), CommonValues.MASTERDB, isFredhDb);
+        dbInstallService.defaultValues(insertDefaultValues(CommonValues.MASTERDB));
     }
 
 

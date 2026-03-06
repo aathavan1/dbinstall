@@ -17,4 +17,6 @@ public interface DbInstallDao {
     List<Map<String, Object>> checkDataForDefaultValues(DefaultValuesModel defaultValuesModel);
 
     List<Map<String, Object>> getData(String query, JdbcTemplate jdbcTemplate);
+
+    String getTablePrefix(String tableName);
 }

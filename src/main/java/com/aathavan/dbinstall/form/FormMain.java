@@ -255,7 +255,7 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         y = DbInstallCommon.verticalGap(panelDbInstall, lblHeading, vGap);
 
         txtArea = new JTextArea();
-        txtArea.setEnabled(false);
+        txtArea.setEditable(false);
 
         scrPanel = new JScrollPane(txtArea);
         scrPanel.setBounds(getWidth() * 15 / 100, y, getWidth() * 70 / 100, getHeight() * 60 / 100);
@@ -285,11 +285,13 @@ public class FormMain extends JFrame implements WindowListener, KeyListener, Act
         y = DbInstallCommon.verticalGap(panelDbInstall, lblProgressPer, vGap / 2);
 
         btnInstall = btnCreation("Install", getWidth() * 40 / 100, y, (int) (compWidth / 1.6), (int) (compHeight * 1.2), false, font);
+        btnInstall.setMnemonic(KeyEvent.VK_I);
         lblBackgroundImg.add(btnInstall);
 
         x = DbInstallCommon.horizontalGap(panelDbInstall, btnInstall, hGap * 2);
 
         btnExit2 = btnCreation("Exit", x, y, btnInstall.getWidth(), btnInstall.getHeight(), false, font);
+        btnExit2.setMnemonic(KeyEvent.VK_E);
         lblBackgroundImg.add(btnExit2);
     }
 
